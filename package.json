@@ -1,0 +1,15 @@
+{
+  "name": "@devmastery/root",
+  "private": true,
+  "description": "Monorepo for Dev Mastery",
+  "main": "index.js",
+  "author": "Bill Sourour <bill@devmastery.com>",
+  "license": "UNLICENSED",
+  "workspaces": [
+    "packages/*",
+    "websites/*"
+  ],
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  }
+}

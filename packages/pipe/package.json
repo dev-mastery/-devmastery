@@ -1,0 +1,25 @@
+{
+  "name": "@devmastery/pipe",
+  "version": "0.0.1",
+  "description": "General utilities",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "author": "Dev Mastery",
+  "license": "MIT",
+  "devDependencies": {
+    "rollup": "^2.27.1",
+    "rollup-plugin-typescript2": "^0.27.2",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {}
+}
