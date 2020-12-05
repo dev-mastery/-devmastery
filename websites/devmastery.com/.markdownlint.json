@@ -1,4 +1,4 @@
 {
-  "MD041": false,
-  "MD013": false
+  "MD041": false, // First line in file should be a top level heading
+  "MD013": false // 80 characters per line
 }

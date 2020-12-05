@@ -118,7 +118,7 @@ export async function getContent<T extends Content>({
   fallbackLocale = "en",
 }: GetContentProps): Promise<T[]> {
   if (
-    process.env.NODE_ENV === "production" &&
+    // process.env.NODE_ENV === "production" &&
     contentItems &&
     contentItems[locale] &&
     contentItems[locale][contentType]
