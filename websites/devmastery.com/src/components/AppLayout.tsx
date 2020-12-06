@@ -1,5 +1,6 @@
 import styled, { createGlobalStyle } from "styled-components";
 import Image from "next/image";
+import { PropsWithChildren } from "react";
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -25,7 +26,7 @@ const Container = styled.div`
   width: 100vw;
   min-height: 100vh;
   /* grid-template-rows: 60px auto 180px; */
-  grid-template-rows: 60px auto;
+  grid-template-rows: 60px auto minmax(auto, 90px);
 `;
 
 const Header = styled.div`
@@ -77,9 +78,24 @@ const Footer = styled.div`
   height: 100%;
   width: 100%;
   background-color: #222;
+  text-align: center;
 `;
 
-export default function AppLayout({ children }) {
+interface PageText {
+  menu: {
+    articles: { label: string; alt: string };
+    videos: { label: string; alt: string };
+    podcasts: { label: string; alt: string };
+    books: { label: string; alt: string };
+    courses: { label: string; alt: string };
+  };
+  footer: { copyright: string };
+}
+
+export default function AppLayout({
+  children,
+  t,
+}: PropsWithChildren<{ t: PageText }>) {
   return (
     <>
       <GlobalStyle />
@@ -90,16 +106,16 @@ export default function AppLayout({ children }) {
               <Image src="/images/logo.svg" width={200} height={30} />
             </Logo>
             <Menu>
-              <MenuItem>Articles</MenuItem>
-              <MenuItem>Videos</MenuItem>
-              <MenuItem>Podcasts</MenuItem>
-              <MenuItem>Books</MenuItem>
-              <MenuItem>Courses</MenuItem>
+              <MenuItem>{t?.menu?.articles?.label}</MenuItem>
+              <MenuItem>{t?.menu?.videos?.label}</MenuItem>
+              <MenuItem>{t?.menu?.podcasts?.label}</MenuItem>
+              <MenuItem>{t?.menu?.books?.label}</MenuItem>
+              <MenuItem>{t?.menu?.courses?.label}</MenuItem>
             </Menu>
           </TopBar>
         </Header>
         <Body>{children}</Body>
-        {/* <Footer>Footer</Footer> */}
+        <Footer>{t?.footer?.copyright}</Footer>
       </Container>
     </>
   );
