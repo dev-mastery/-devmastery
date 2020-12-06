@@ -1,14 +1,7 @@
 const WatchExternalFilesPlugin = require("extra-watch-webpack-plugin");
-
+const i18n = require("./locales.config");
 module.exports = {
-  i18n: {
-    // These are all the locales you want to support in
-    // your application
-    locales: ["en", "fr"],
-    // This is the default locale you want to be used when visiting
-    // a non-locale prefixed path e.g. `/hello`
-    defaultLocale: "en",
-  },
+  i18n,
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Note: we provide webpack above so you should not `require` it
     // Perform customizations to webpack config

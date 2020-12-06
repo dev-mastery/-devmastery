@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { GetStaticProps, GetStaticPropsContext } from "next";
 import { getContentItem, getContent, Content } from "../lib/content";
 import Markdown from "../components/Markdown";
+import { getPageText, getNamespaceText } from "../lib/translation";
 
 const contentType = "offer";
 const slug = "initial";
@@ -64,12 +65,14 @@ const PageTitle = styled.h1`
   /* text-decoration: underline; */
 `;
 
-export default function Index({
+export default function Home({
   offer,
   posts,
+  t,
 }: {
   offer: Offer;
   posts: Content[];
+  t: { homepage: { title: string } };
 }) {
   return (
     <>
@@ -81,7 +84,7 @@ export default function Index({
         <Markdown>{offer.body}</Markdown>
         <PrimaryButton>{offer.callToAction}</PrimaryButton>
       </Hero>
-      <PageTitle>Latest Posts</PageTitle>
+      <PageTitle>{t?.homepage?.title}</PageTitle>
       <PostList>
         {posts.map((post) => (
           <PostFrame key={post.id}>
@@ -105,7 +108,18 @@ export const getStaticProps: GetStaticProps = async function ({
     contentType,
     slug,
   });
-
+  let menuText = getNamespaceText({
+    locale,
+    fallbackLocale,
+    namespace: "menu",
+  });
+  let footerText = getNamespaceText({
+    locale,
+    fallbackLocale,
+    namespace: "footer",
+  });
+  let t = getPageText({ locale, fallbackLocale, pageName: "homepage" });
+  console.log(t);
   let posts = (
     await getContent({
       contentType: postContentType,
@@ -117,5 +131,5 @@ export const getStaticProps: GetStaticProps = async function ({
       (b.originallyPublished as number) - (a.originallyPublished as number)
   );
 
-  return { props: { offer, posts } };
+  return { props: { offer, posts, menuText, footerText, t } };
 };
