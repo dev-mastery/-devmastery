@@ -1,40 +1,87 @@
 import text from "./text.json";
 import languages from "./language-codes.json";
-
-// TODO Consider a more robust solution like i18next but make sure translation
-// happens at build time, not runtime, to keep things moving fast.
+import i18n from "i18next";
+import config from "../../../locales.config";
+// NB: make sure translation happens at build time, not runtime.
 
 export default {
+  getNsText,
+  getNamespace,
   getPageText,
-  getNamespaceText,
   getLanguageName,
 };
 
 const commonNamespaces = ["menu", "footer"];
+const defaultMergeParams = {
+  footer: {
+    copyright: { currentYear: new Date().getFullYear() },
+  },
+};
 
-export function getPageText({ locale, pageName, fallbackLocale }) {
-  let common = commonNamespaces.reduce((t, ns) => {
-    t[ns] = getNamespaceText({ locale, fallbackLocale, namespace: ns });
-    return t;
-  }, {});
-
-  let page = {
-    [pageName]: getNamespaceText({
-      locale,
-      fallbackLocale,
-      namespace: pageName,
-    }),
-  };
-
-  return { ...common, ...page };
+async function init() {
+  if (!i18n.isInitialized) {
+    return i18n.init({
+      fallbackLng: config.defaultLocale,
+      lng: config.defaultLocale,
+      ns: ["menu", "footer", "homepage"],
+      resources: toI18NextResources(text),
+      supportedLngs: config.locales,
+    });
+  }
 }
 
-export function getNamespaceText({ locale, namespace, fallbackLocale }) {
-  if (!text[namespace]) return null;
-  return Object.keys(text[namespace]).reduce((acc, k) => {
-    acc[k] = text[namespace][k][locale ?? fallbackLocale];
-    return acc;
-  }, {});
+export function getNamespace({
+  namespace,
+  locale = config.defaultLocale,
+}: {
+  namespace: string;
+  locale: string;
+}) {
+  return Object.freeze({
+    getText: (key: string, params?: object) =>
+      getNsText({ locale, namespace, key, params }),
+  });
+}
+
+export async function getNsText({
+  locale,
+  namespace,
+  key,
+  params,
+}: {
+  locale: string;
+  namespace: string;
+  key: string;
+  params?: object;
+}) {
+  await init();
+  let lang = i18n.languages.includes(locale) ? locale : config.defaultLocale;
+  await i18n.changeLanguage(lang);
+  return i18n.t(`${namespace}:${key}`, params);
+}
+
+export async function getPageText({
+  locale,
+  pageName,
+  merge = {},
+}: {
+  locale: string;
+  pageName: string;
+  merge?: object;
+}) {
+  let pageText = {};
+  let mergeParams = { ...defaultMergeParams, ...merge };
+
+  for (let ns of [...commonNamespaces, pageName]) {
+    let { getText } = getNamespace({ namespace: ns, locale });
+    let nsParams = mergeParams[ns] ?? {};
+    for (let key in text[ns]) {
+      pageText[ns] = pageText[ns] ?? {};
+      pageText[ns][key] = await getText(key, nsParams[key]);
+    }
+  }
+
+  return pageText;
 }
 
 export function getLanguageName({ code }: { code: string }) {
@@ -45,4 +92,18 @@ export function getLanguageName({ code }: { code: string }) {
   }
 
   return { englishName: lang?.name, nativeName: lang?.nativeName };
+}
+
+function toI18NextResources(text) {
+  let resources = {};
+  for (let namespace in text) {
+    for (let key in text[namespace]) {
+      for (let language in text[namespace][key]) {
+        resources[language] = resources[language] ?? {};
+        resources[language][namespace] = resources[language][namespace] ?? {};
+        resources[language][namespace][key] = text[namespace][key][language];
+      }
+    }
+  }
+  return resources;
 }

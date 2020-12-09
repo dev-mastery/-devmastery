@@ -1,30 +1,30 @@
 {
   "menu": {
     "articles": {
-      "en": { "label": "Articles", "alt": "Navigate to the Articles section." },
-      "fr": { "label": "Articles", "alt": "Liens a la section des Articles." }
+      "en": "Articles",
+      "fr": "Articles"
     },
     "videos": {
-      "en": { "label": "Videos", "alt": "Navigate to the Videos section." },
-      "fr": { "label": "Vidéos", "alt": "Liens a la section des Vidéos." }
+      "en": "Videos",
+      "fr": "Vidéos"
     },
     "podcasts": {
-      "en": { "label": "Podcasts", "alt": "Navigate to the Podcasts section." },
-      "fr": { "label": "Podcasts", "alt": "Liens a la section des Podcasts" }
+      "en": "Podcasts",
+      "fr": "Podcasts"
     },
     "books": {
-      "en": { "label": "Books", "alt": "Navigate to the Book section." },
-      "fr": { "label": "Livres", "alt": "Liens a la section des Livres" }
+      "en": "Books",
+      "fr": "Livres"
     },
     "courses": {
-      "en": { "label": "Courses", "alt": "Navigate to the Courses section." },
-      "fr": { "label": "Cours", "alt": "Liens a la section des Cours" }
+      "en": "Courses",
+      "fr": "Cours"
     }
   },
   "footer": {
     "copyright": {
-      "en": "© Copyright Dev Mastery. All rights reserved.",
-      "fr": "© Dev Mastery. Ce site et son contenu sont protégés par le droit d'auteur et les droits de propriété intellectuelle."
+      "en": "© Copyright 2015-{{currentYear}} Dev Mastery. All rights reserved.",
+      "fr": "© 2015-{{currentYear}} Dev Mastery. Ce site et son contenu sont protégés par le droit d'auteur et les droits de propriété intellectuelle."
     },
     "github": {
       "en": "DevMastery.com Github Repo",

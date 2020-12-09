@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { GetStaticProps, GetStaticPropsContext } from "next";
 import { getContentItem, getContent, Content } from "../lib/content";
 import Markdown from "../components/Markdown";
-import { getPageText, getNamespaceText } from "../lib/translation";
+import { getPageText } from "../lib/translation";
 
 const contentType = "offer";
 const slug = "initial";
@@ -18,7 +18,9 @@ interface Offer extends Content {
 
 const PrimaryButton = styled.a`
   border: none;
-  background-color: aquamarine;
+  /* background-color: aquamarine; */
+  /* background-color: #049948; */
+  background-color: #9fffcb;
   padding: 12px;
   font-size: 1.1rem;
   color: #000;
@@ -33,7 +35,7 @@ const PostList = styled.div`
 
 const PostFrame = styled.section`
   display: grid;
-  padding: 12px 0;
+  padding: 0;
   min-height: 200px;
   justify-content: center;
   align-content: center;
@@ -44,7 +46,7 @@ const PostFrame = styled.section`
 `;
 
 const PostSummary = styled.section`
-  padding: 12px;
+  padding: 64px 12px;
   max-width: 36rem;
   font-size: 1rem;
   line-height: 1.4rem;
@@ -58,9 +60,13 @@ const PostTitle = styled.h2`
 
 const PageTitle = styled.h1`
   text-align: center;
-  background-color: whitesmoke;
+  /* background-color: whitesmoke; */
+  background-color: #25a18e;
+  background-color: #004e64;
+  color: white;
   margin-top: 0;
-  padding: 12px;
+  padding: 6px;
+  margin: 0;
   /* text-transform: uppercase; */
   /* text-decoration: underline; */
 `;
@@ -68,12 +74,13 @@ const PageTitle = styled.h1`
 export default function Home({
   offer,
   posts,
-  t,
+  text,
 }: {
   offer: Offer;
   posts: Content[];
-  t: { homepage: { title: string } };
+  text: { homepage: object };
 }) {
+  let t = text.homepage ?? {};
   return (
     <>
       <Hero
@@ -84,7 +91,7 @@ export default function Home({
         <Markdown>{offer.body}</Markdown>
         <PrimaryButton>{offer.callToAction}</PrimaryButton>
       </Hero>
-      <PageTitle>{t?.homepage?.title}</PageTitle>
+      <PageTitle>{t["title"]}</PageTitle>
       <PostList>
         {posts.map((post) => (
           <PostFrame key={post.id}>
@@ -101,35 +108,26 @@ export default function Home({
 
 export const getStaticProps: GetStaticProps = async function ({
   locale,
-  defaultLocale: fallbackLocale,
+  defaultLocale,
 }: GetStaticPropsContext) {
   let offer: Offer = await getContentItem<Offer>({
-    locale: locale ?? fallbackLocale,
+    locale: locale ?? defaultLocale,
     contentType,
     slug,
   });
-  let menuText = getNamespaceText({
-    locale,
-    fallbackLocale,
-    namespace: "menu",
-  });
-  let footerText = getNamespaceText({
-    locale,
-    fallbackLocale,
-    namespace: "footer",
-  });
-  let t = getPageText({ locale, fallbackLocale, pageName: "homepage" });
-  console.log(t);
+
+  let text = await getPageText({ locale, pageName: "homepage" });
+  console.log(text);
   let posts = (
     await getContent({
       contentType: postContentType,
       locale,
-      fallbackLocale,
+      fallbackLocale: defaultLocale,
     })
   ).sort(
     (a: Offer, b: Offer) =>
       (b.originallyPublished as number) - (a.originallyPublished as number)
   );
 
-  return { props: { offer, posts, menuText, footerText, t } };
+  return { props: { offer, posts, text } };
 };

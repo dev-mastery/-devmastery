@@ -1,5 +1,6 @@
 import styled, { createGlobalStyle } from "styled-components";
 import Image from "next/image";
+import Menu from "./Menu";
 import { PropsWithChildren } from "react";
 
 const GlobalStyle = createGlobalStyle`
@@ -25,7 +26,6 @@ const Container = styled.div`
   display: grid;
   width: 100vw;
   min-height: 100vh;
-  /* grid-template-rows: 60px auto 180px; */
   grid-template-rows: 60px auto minmax(auto, 90px);
 `;
 
@@ -51,21 +51,6 @@ const Logo = styled.div`
   justify-self: start;
 `;
 
-const Menu = styled.nav`
-  justify-self: end;
-  display: grid;
-  align-content: center;
-  justify-content: space-evenly;
-  grid-gap: 2em;
-  grid-template-columns: repeat(5, auto);
-`;
-
-const MenuItem = styled.span`
-  font-size: 18px;
-  font-weight: 500;
-  text-transform: uppercase;
-`;
-
 const Body = styled.main`
   height: 100%;
   width: 100%;
@@ -73,29 +58,19 @@ const Body = styled.main`
   background-color: #fefefe;
 `;
 
-const Footer = styled.div`
+const Footer = styled.small`
   color: white;
   height: 100%;
   width: 100%;
   background-color: #222;
   text-align: center;
+  padding: 1vh 0;
 `;
-
-interface PageText {
-  menu: {
-    articles: { label: string; alt: string };
-    videos: { label: string; alt: string };
-    podcasts: { label: string; alt: string };
-    books: { label: string; alt: string };
-    courses: { label: string; alt: string };
-  };
-  footer: { copyright: string };
-}
 
 export default function AppLayout({
   children,
-  t,
-}: PropsWithChildren<{ t: PageText }>) {
+  text,
+}: PropsWithChildren<{ text?: { menu: object; footer: object } }>) {
   return (
     <>
       <GlobalStyle />
@@ -103,19 +78,13 @@ export default function AppLayout({
         <Header>
           <TopBar>
             <Logo>
-              <Image src="/images/logo.svg" width={200} height={30} />
+              <Image src="/images/logo copy.svg" width={200} height={30} />
             </Logo>
-            <Menu>
-              <MenuItem>{t?.menu?.articles?.label}</MenuItem>
-              <MenuItem>{t?.menu?.videos?.label}</MenuItem>
-              <MenuItem>{t?.menu?.podcasts?.label}</MenuItem>
-              <MenuItem>{t?.menu?.books?.label}</MenuItem>
-              <MenuItem>{t?.menu?.courses?.label}</MenuItem>
-            </Menu>
+            <Menu text={text?.menu} />
           </TopBar>
         </Header>
         <Body>{children}</Body>
-        <Footer>{t?.footer?.copyright}</Footer>
+        <Footer>{text?.footer["copyright"]}</Footer>
       </Container>
     </>
   );
