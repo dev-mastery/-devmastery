@@ -19,7 +19,7 @@ const HeroContent = styled.header`
   color: white;
   height: 100vh;
   max-height: 600px;
-  width: 96vw;
+  width: 100vw;
   max-width: ${(props: { maxWidth: string }) => props.maxWidth};
 `;
 
