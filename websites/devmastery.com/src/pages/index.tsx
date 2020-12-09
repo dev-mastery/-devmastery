@@ -1,7 +1,7 @@
 import React from "react";
 import Hero from "../components/Hero";
 import Image from "next/image";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { GetStaticProps, GetStaticPropsContext } from "next";
 import { getContentItem, getContent, Content } from "../lib/content";
 import Markdown from "../components/Markdown";
