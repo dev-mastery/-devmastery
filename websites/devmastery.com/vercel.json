@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": ".*/.md",
+      "destination": "/404.html"
+    }
+  ]
+}
