@@ -1,7 +1,7 @@
 {
   "redirects": [
     {
-      "source": "(.*)/.md",
+      "source": "(.*/.md)",
       "destination": "/404.html",
       "statusCode": 404
     }
