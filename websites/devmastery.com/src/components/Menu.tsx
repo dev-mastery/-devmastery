@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 const Nav = styled.nav`
   justify-self: end;

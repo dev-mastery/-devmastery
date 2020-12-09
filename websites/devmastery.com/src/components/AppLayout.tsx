@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from "styled-components";
+import styled from "@emotion/styled";
 import Image from "next/image";
 import Menu from "./Menu";
 import { PropsWithChildren } from "react";
