@@ -18,12 +18,10 @@ interface Offer extends Content {
 
 const PrimaryButton = styled.a`
   border: none;
-  /* background-color: aquamarine; */
-  /* background-color: #049948; */
-  background-color: #9fffcb;
+  background-color: ${(props) => props.theme.colors.soft};
   padding: 12px;
   font-size: 1.1rem;
-  color: #000;
+  color: ${(props) => props.theme.colors.dark};
   cursor: pointer;
   border-radius: 4px;
   text-decoration: none;
@@ -39,9 +37,13 @@ const PostFrame = styled.section`
   min-height: 200px;
   justify-content: center;
   align-content: center;
-  background-color: white;
-  :nth-child(even) {
-    background-color: whitesmoke;
+  color: ${({ theme }) =>
+    theme.mode === "dark" ? theme.colors.white : theme.colors.black};
+  background-color: ${({ theme }) =>
+    theme.mode === "dark" ? theme.colors.dark : theme.colors.white};
+  :nth-of-type(even) {
+    background-color: ${({ theme }) =>
+      theme.mode === "dark" ? theme.colors.black : theme.colors.light};
   }
 `;
 
@@ -60,15 +62,11 @@ const PostTitle = styled.h2`
 
 const PageTitle = styled.h1`
   text-align: center;
-  /* background-color: whitesmoke; */
-  background-color: #25a18e;
-  background-color: #004e64;
-  color: white;
+  background-color: ${(props) => props.theme.colors.strong};
+  color: ${(props) => props.theme.colors.white};
   margin-top: 0;
   padding: 6px;
   margin: 0;
-  /* text-transform: uppercase; */
-  /* text-decoration: underline; */
 `;
 
 export default function Home({
@@ -117,7 +115,6 @@ export const getStaticProps: GetStaticProps = async function ({
   });
 
   let text = await getPageText({ locale, pageName: "homepage" });
-  console.log(text);
   let posts = (
     await getContent({
       contentType: postContentType,

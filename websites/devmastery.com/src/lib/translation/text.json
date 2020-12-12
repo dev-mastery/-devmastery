@@ -1,5 +1,5 @@
 {
-  "menu": {
+  "header": {
     "articles": {
       "en": "Articles",
       "fr": "Articles"
@@ -19,6 +19,14 @@
     "courses": {
       "en": "Courses",
       "fr": "Cours"
+    },
+    "darkMode": {
+      "en": "Switch to dark mode.",
+      "fr": "Activer le thème sombre."
+    },
+    "lightMode": {
+      "en": "Switch to light mode.",
+      "fr": "Activer le thème lumineux."
     }
   },
   "footer": {

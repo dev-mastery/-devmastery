@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styled from "@emotion/styled";
+import ThemeMode from "./ThemeMode";
 
 const Nav = styled.nav`
   justify-self: end;
@@ -7,7 +8,7 @@ const Nav = styled.nav`
   align-content: center;
   justify-content: space-evenly;
   grid-gap: 2em;
-  grid-template-columns: repeat(5, auto);
+  grid-template-columns: repeat(6, auto);
 `;
 
 const NavItem = styled.a`
@@ -19,6 +20,7 @@ const NavItem = styled.a`
 
 export default function Menu({ text }: { text: object }) {
   let t = text ?? {};
+
   return (
     <Nav>
       <Link href="/articles" passHref>
@@ -36,6 +38,9 @@ export default function Menu({ text }: { text: object }) {
       <Link href="/courses" passHref>
         <NavItem>{t["courses"]}</NavItem>
       </Link>
+      <NavItem>
+        <ThemeMode text={t} />
+      </NavItem>
     </Nav>
   );
 }

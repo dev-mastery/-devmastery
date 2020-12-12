@@ -11,7 +11,7 @@ export default {
   getLanguageName,
 };
 
-const commonNamespaces = ["menu", "footer"];
+const commonNamespaces = ["header", "footer"];
 const defaultMergeParams = {
   footer: {
     copyright: { currentYear: new Date().getFullYear() },
@@ -22,8 +22,7 @@ async function init() {
   if (!i18n.isInitialized) {
     return i18n.init({
       fallbackLng: config.defaultLocale,
-      lng: config.defaultLocale,
-      ns: ["menu", "footer", "homepage"],
+      ns: ["header", "footer", "homepage"],
       resources: toI18NextResources(text),
       supportedLngs: config.locales,
     });
@@ -55,8 +54,7 @@ export async function getNsText({
   params?: object;
 }) {
   await init();
-  let lang = i18n.languages.includes(locale) ? locale : config.defaultLocale;
-  await i18n.changeLanguage(lang);
+  await i18n.changeLanguage(locale);
   return i18n.t(`${namespace}:${key}`, params);
 }
 

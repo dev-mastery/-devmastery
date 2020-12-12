@@ -11,10 +11,12 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
-  color: whitesmoke;
+  color: ${({ theme }) =>
+    theme.mode === "dark" ? theme.colors.light : theme.colors.white};
   height: 100%;
   width: 100%;
-  background-color: #000;
+  background-color: ${({ theme }) =>
+    theme.mode === "dark" ? theme.colors.black : theme.colors.dark};
   justify-content: center;
   align-content: center;
   display: grid;
@@ -35,8 +37,10 @@ const Logo = styled.div`
 const Body = styled.main`
   height: 100%;
   width: 100%;
-  color: black;
-  background-color: #fefefe;
+  color: ${({ theme }) =>
+    theme.mode === "dark" ? theme.colors.black : theme.colors.white};
+  background-color: ${({ theme }) =>
+    theme.mode === "dark" ? theme.colors.dark : theme.colors.light};
 `;
 
 const Footer = styled.small`
@@ -51,7 +55,7 @@ const Footer = styled.small`
 export default function AppLayout({
   children,
   text,
-}: PropsWithChildren<{ text?: { menu: object; footer: object } }>) {
+}: PropsWithChildren<{ text?: { header: object; footer: object } }>) {
   return (
     <Container>
       <Header>
@@ -59,7 +63,7 @@ export default function AppLayout({
           <Logo>
             <Image src="/images/logo copy.svg" width={200} height={30} />
           </Logo>
-          <Menu text={text?.menu} />
+          <Menu text={text?.header} />
         </TopBar>
       </Header>
       <Body>{children}</Body>

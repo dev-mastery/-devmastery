@@ -4,7 +4,7 @@ import Image from "next/image";
 const HeroLayout = styled.div`
   display: grid;
   width: 100vw;
-  background-color: #000;
+  background-color: ${(props) => props.theme.colors.black};
   height: 100vh;
   max-height: 600px;
   justify-content: center;
@@ -16,11 +16,12 @@ const HeroLayout = styled.div`
 
 const HeroContent = styled.header`
   position: relative;
-  color: white;
+  color: ${(props) => props.theme.colors.white};
   height: 100vh;
   max-height: 600px;
   width: 100vw;
   max-width: ${(props: { maxWidth: string }) => props.maxWidth};
+  user-select: none;
 `;
 
 const HeroOverlay = styled.h1`
@@ -37,8 +38,8 @@ const HeroOverlay = styled.h1`
   font-weight: semibold;
   text-align: left;
   max-width: 700px;
-  text-shadow: 0px 0px 1px #999;
-  color: whitesmoke;
+  text-shadow: 0px 0px 1px ${(props) => props.theme.colors.light};
+  color: ${(props) => props.theme.colors.white};
 `;
 
 export default function Hero({

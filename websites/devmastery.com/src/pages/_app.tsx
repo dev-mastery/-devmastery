@@ -1,10 +1,11 @@
 import { AppProps } from "next/app";
 import AppLayout from "../components/AppLayout";
 import { css, Global } from "@emotion/react";
-
+import ThemeProvider from "../theme/ThemeProvider";
+import theme from "../theme";
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Global
         styles={css`
           html,
@@ -30,6 +31,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <AppLayout {...pageProps}>
         <Component {...pageProps} />
       </AppLayout>
-    </>
+    </ThemeProvider>
   );
 }
