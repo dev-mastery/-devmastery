@@ -6,7 +6,8 @@ image: cover.png
 category:
   - Code
 tags:
-  - javascript
+  - standards
+  - advice
 ---
 
 Stop me if you’ve heard this one before…
