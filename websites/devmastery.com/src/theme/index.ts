@@ -1,4 +1,28 @@
-import type { Theme } from "@emotion/react";
+export interface Theme {
+  mode: string;
+  scale: number;
+  colors: {
+    black: string;
+    white: string;
+    dark: string;
+    light: string;
+    brand: string;
+    accent: string;
+    strong: string;
+    soft: string;
+    primary: string;
+    success: string;
+    warning: string;
+    error: string;
+  };
+  fonts?: {
+    body: string;
+    heading: string;
+    monospace: string;
+  };
+  space?: number[];
+  fontSizes?: number[];
+}
 
 export default {
   mode: "light",
