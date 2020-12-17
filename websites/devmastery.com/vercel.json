@@ -2,7 +2,7 @@
   "redirects": [
     {
       "source": "/hello.md",
-      "destination": "/404.html"
+      "destination": "/"
     }
   ]
 }
