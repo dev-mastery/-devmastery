@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
+import Logo from "./Logo";
 import Menu from "./Menu";
 import { PropsWithChildren } from "react";
 
@@ -7,19 +8,24 @@ const Container = styled.div`
   display: grid;
   width: 100vw;
   min-height: 100vh;
-  grid-template-rows: 60px auto minmax(auto, 90px);
+  grid-template-rows: auto minmax(auto, 90px);
 `;
 
 const Header = styled.div`
   color: ${({ theme }) =>
     theme.mode === "dark" ? theme.colors.light : theme.colors.white};
-  height: 100%;
+  margin: 0 auto;
+  padding-top: 2px;
+  height: 56px;
   width: 100%;
   background-color: ${({ theme }) =>
-    theme.mode === "dark" ? theme.colors.black : theme.colors.dark};
+    theme.mode === "dark" ? theme.colors.dark : theme.colors.accent};
   justify-content: center;
   align-content: center;
   display: grid;
+  z-index: 200;
+  position: fixed;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.accent};
 `;
 
 const TopBar = styled.section`
@@ -30,7 +36,7 @@ const TopBar = styled.section`
   align-content: center;
 `;
 
-const Logo = styled.div`
+const LogoWrapper = styled.div`
   justify-self: start;
 `;
 
@@ -60,9 +66,9 @@ export default function AppLayout({
     <Container>
       <Header>
         <TopBar>
-          <Logo>
-            <Image src="/images/logo copy.svg" width={200} height={30} />
-          </Logo>
+          <LogoWrapper>
+            <Logo text={text?.header} />
+          </LogoWrapper>
           <Menu text={text?.header} />
         </TopBar>
       </Header>
