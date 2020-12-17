@@ -1,22 +1,6 @@
 import "@emotion/react";
+import type { Theme as SiteTheme } from "./src/theme";
 
 declare module "@emotion/react" {
-  export interface Theme {
-    mode: string;
-    scale: number;
-    colors: {
-      black: string;
-      white: string;
-      dark: string;
-      light: string;
-      brand: string;
-      accent: string;
-      strong: string;
-      soft: string;
-      primary: string;
-      success: string;
-      warning: string;
-      error: string;
-    };
-  }
+  export interface Theme extends SiteTheme {}
 }
