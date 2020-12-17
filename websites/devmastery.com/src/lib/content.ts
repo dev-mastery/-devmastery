@@ -4,8 +4,7 @@ import {
   getFileInfo,
   makePath,
 } from "./file-system";
-import matter from "gray-matter";
-import yaml from "js-yaml";
+import { parseMarkdown } from "./parse-markdown";
 import { pipe } from "./util";
 
 export default {
@@ -213,15 +212,6 @@ async function processMarkdownFile({ filePath }) {
       : createdAt;
 
   return { frontMatter, body, createdAt, modifiedAt };
-}
-
-async function parseMarkdown({ markdown }: { markdown: string }) {
-  let { data: frontMatter, content: body } = matter(markdown, {
-    engines: {
-      yaml: (s) => yaml.safeLoad(s, { schema: yaml.JSON_SCHEMA }) as object,
-    },
-  });
-  return { frontMatter, body };
 }
 
 async function validateContentType({ contentType }: { contentType: string }) {
