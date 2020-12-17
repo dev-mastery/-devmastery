@@ -89,7 +89,7 @@ export default function Home({
         <Markdown>{offer.body}</Markdown>
         <PrimaryButton>{offer.callToAction}</PrimaryButton>
       </Hero>
-      <PageTitle>{t["title"]}</PageTitle>
+      {/* <PageTitle>{t["title"]}</PageTitle> */}
       <PostList>
         {posts.map((post) => (
           <PostFrame key={post.id}>
