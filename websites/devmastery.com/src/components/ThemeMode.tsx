@@ -1,8 +1,6 @@
 import { useTheme } from "../theme/ThemeProvider";
-import {
-  AiFillBulb as DarkIcon,
-  AiOutlineBulb as LightIcon,
-} from "react-icons/ai";
+import { RiSunFill as DarkIcon } from "react-icons/ri";
+import { RiMoonFill as LightIcon } from "react-icons/ri";
 
 export default function ThemeMode({ text }: { text: object }) {
   let { theme, setMode } = useTheme();
@@ -26,6 +24,7 @@ export default function ThemeMode({ text }: { text: object }) {
       role="button"
       title={t["lightMode"]}
       fill={theme.colors.warning}
+      style={{ marginBottom: "-2px" }}
     />
   ) : (
     <LightIcon
@@ -36,6 +35,7 @@ export default function ThemeMode({ text }: { text: object }) {
       fill={theme.colors.warning}
       role="button"
       title={t["darkMode"]}
+      style={{ marginBottom: "-2px" }}
     />
   );
 }
