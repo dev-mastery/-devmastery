@@ -66,19 +66,21 @@ function renderImage(props: { src: string; alt?: string }) {
     src = props.src;
     url = new URL(src);
   }
-  src = src ?? `/assets/${props.src}`;
+  src = src ?? `/images/${props.src}`;
   url = url ?? new URL(`http://fake.url/${src}`);
 
   let query = url.searchParams;
   let width = query.get("w") ?? query.get("width") ?? defaultImageSize.width;
   let height = query.get("h") ?? query.get("height") ?? defaultImageSize.height;
   return (
-    <Image
-      src={src}
-      alt={props.alt}
-      width={Number(width)}
-      height={Number(height)}
-    />
+    <div style={{ textAlign: "center" }}>
+      <Image
+        src={src}
+        alt={props.alt}
+        width={Number(width)}
+        height={Number(height)}
+      />
+    </div>
   );
 }
 

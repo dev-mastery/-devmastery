@@ -92,7 +92,7 @@ export function getLanguageName({ code }: { code: string }) {
   return { englishName: lang?.name, nativeName: lang?.nativeName };
 }
 
-function toI18NextResources(text) {
+function toI18NextResources(text: object) {
   let resources = {};
   for (let namespace in text) {
     for (let key in text[namespace]) {

@@ -61,7 +61,7 @@ export const getStaticProps: GetStaticProps = async function ({
   params: { slug },
 }: GetStaticPropsContext) {
   let author: Author = await getContentItem<Author>({
-    locale: locale ?? defaultLocale,
+    locale: (locale ?? defaultLocale) as Locale,
     contentType,
     slug: slug as string,
   });

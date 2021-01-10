@@ -3,15 +3,16 @@ import Hero from "../components/Hero";
 import Image from "next/image";
 import styled from "@emotion/styled";
 import { GetStaticProps, GetStaticPropsContext } from "next";
-import { getContentItem, getContent, Content } from "../lib/content";
+import * as Content from "../content";
+import type { ContentItem } from "../content";
 import Markdown from "../components/Markdown";
 import { getPageText } from "../lib/translation";
+import PostList from "../components/PostList";
 
-const contentType = "offer";
-const slug = "initial";
+const slug = "initial-offer";
 const postContentType = "post";
 
-interface Offer extends Content {
+interface Offer extends ContentItem {
   callToAction: string;
   imageCaption: string;
 }
@@ -25,39 +26,6 @@ const PrimaryButton = styled.a`
   cursor: pointer;
   border-radius: 4px;
   text-decoration: none;
-`;
-
-const PostList = styled.div`
-  width: 100vw;
-`;
-
-const PostFrame = styled.section`
-  display: grid;
-  padding: 0;
-  min-height: 200px;
-  justify-content: center;
-  align-content: center;
-  color: ${({ theme }) =>
-    theme.mode === "dark" ? theme.colors.white : theme.colors.black};
-  background-color: ${({ theme }) =>
-    theme.mode === "dark" ? theme.colors.dark : theme.colors.white};
-  :nth-of-type(even) {
-    background-color: ${({ theme }) =>
-      theme.mode === "dark" ? theme.colors.black : theme.colors.light};
-  }
-`;
-
-const PostSummary = styled.section`
-  padding: 64px 12px;
-  max-width: 36rem;
-  font-size: 1rem;
-  line-height: 1.4rem;
-`;
-
-const PostTitle = styled.h2`
-  font-size: 1.8rem;
-  line-height: 2rem;
-  margin: 0;
 `;
 
 const PageTitle = styled.h1`
@@ -75,7 +43,7 @@ export default function Home({
   text,
 }: {
   offer: Offer;
-  posts: Content[];
+  posts: ContentItem[];
   text: { homepage: object };
 }) {
   let t = text.homepage ?? {};
@@ -89,17 +57,7 @@ export default function Home({
         <Markdown>{offer.body}</Markdown>
         <PrimaryButton>{offer.callToAction}</PrimaryButton>
       </Hero>
-      {/* <PageTitle>{t["title"]}</PageTitle> */}
-      <PostList>
-        {posts.map((post) => (
-          <PostFrame key={post.id}>
-            <PostSummary>
-              <PostTitle>{post.title}</PostTitle>
-              <Markdown>{post.summary}</Markdown>
-            </PostSummary>
-          </PostFrame>
-        ))}
-      </PostList>
+      <PostList posts={posts} />
     </>
   );
 }
@@ -108,23 +66,19 @@ export const getStaticProps: GetStaticProps = async function ({
   locale,
   defaultLocale,
 }: GetStaticPropsContext) {
-  let offer: Offer = await getContentItem<Offer>({
-    locale: locale ?? defaultLocale,
-    contentType,
-    slug,
-  });
-
-  let text = await getPageText({ locale, pageName: "homepage" });
-  let posts = (
-    await getContent({
-      contentType: postContentType,
-      locale,
-      fallbackLocale: defaultLocale,
+  let offer: Offer = (
+    await Content.findBySlug({
+      slug: "initial-offer",
+      locale: locale as Locale,
     })
-  ).sort(
-    (a: Offer, b: Offer) =>
-      (b.originallyPublished as number) - (a.originallyPublished as number)
-  );
+  )[0] as Offer;
+  console.log(await Content.getCategories());
+  let text = await getPageText({ locale, pageName: "homepage" });
+  let posts = await Content.getLatest({
+    type: "Post",
+    max: 8,
+    locale: (locale ?? defaultLocale) as Locale,
+  });
 
   return { props: { offer, posts, text } };
 };

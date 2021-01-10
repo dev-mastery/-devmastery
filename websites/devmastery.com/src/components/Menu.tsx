@@ -24,19 +24,19 @@ export default function Menu({ text }: { text: object }) {
   return (
     <Nav>
       <Link href="/articles" passHref>
-        <NavItem>{t["articles"]}</NavItem>
+        <NavItem>{t["Articles"]}</NavItem>
       </Link>
       <Link href="/videos" passHref>
-        <NavItem>{t["videos"]}</NavItem>
+        <NavItem>{t["Videos"]}</NavItem>
       </Link>
       <Link href="/podcasts" passHref>
-        <NavItem>{t["podcasts"]}</NavItem>
+        <NavItem>{t["Podcasts"]}</NavItem>
       </Link>
       <Link href="/books" passHref>
-        <NavItem>{t["books"]}</NavItem>
+        <NavItem>{t["Books"]}</NavItem>
       </Link>
       <Link href="/courses" passHref>
-        <NavItem>{t["courses"]}</NavItem>
+        <NavItem>{t["Courses"]}</NavItem>
       </Link>
       <NavItem>
         <ThemeMode text={t} />

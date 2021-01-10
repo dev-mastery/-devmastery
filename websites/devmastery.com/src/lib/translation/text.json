@@ -1,32 +1,36 @@
 {
   "header": {
-    "articles": {
+    "Articles": {
       "en": "Articles",
       "fr": "Articles"
     },
-    "videos": {
+    "Videos": {
       "en": "Videos",
       "fr": "Vidéos"
     },
-    "podcasts": {
+    "Podcasts": {
       "en": "Podcasts",
       "fr": "Podcasts"
     },
-    "books": {
+    "Books": {
       "en": "Books",
       "fr": "Livres"
     },
-    "courses": {
+    "Courses": {
       "en": "Courses",
       "fr": "Cours"
     },
-    "darkMode": {
+    "CarkMode": {
       "en": "Switch to dark mode.",
       "fr": "Activer le thème sombre."
     },
-    "lightMode": {
+    "Switch to light mode.": {
       "en": "Switch to light mode.",
       "fr": "Activer le thème lumineux."
+    },
+    "Switch to dark mode.": {
+      "en": "Switch to dark mode.",
+      "fr": "Activer le thème foncé."
     }
   },
   "footer": {
@@ -47,6 +51,42 @@
     "title": {
       "en": "Latest Posts",
       "fr": "Nouveauté"
+    }
+  },
+  "contentType": {
+    "Author Bio": {
+      "en": "Author Bio",
+      "fr": "Biographie D'Auteur"
+    },
+    "Article": {
+      "en": "Article",
+      "fr": "Article"
+    },
+    "Video": {
+      "en": "Video",
+      "fr": "Vidéo"
+    },
+    "Podcast": {
+      "en": "Podcast",
+      "fr": "Podcast"
+    },
+    "Book Recommendation": {
+      "en": "Book Recommendation",
+      "fr": "Recommendation de Livre"
+    },
+    "Course Recommendation": {
+      "en": "Course Recommendation",
+      "fr": "Recommendation de Cour"
+    },
+    "Offer": {
+      "en": "Offer",
+      "fr": "Offre"
+    }
+  },
+  "contentCategory": {
+    "Featured": {
+      "en": "Featured",
+      "fr": "En Vedette"
     }
   }
 }

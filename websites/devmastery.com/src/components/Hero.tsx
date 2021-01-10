@@ -6,7 +6,7 @@ const HeroLayout = styled.div`
   width: 100vw;
   background-color: ${(props) => props.theme.colors.black};
   height: 100vh;
-  max-height: 600px;
+  max-height: 540px;
   justify-content: center;
   align-content: center;
   position: relative;
@@ -18,7 +18,7 @@ const HeroContent = styled.header`
   position: relative;
   color: ${(props) => props.theme.colors.white};
   height: 100vh;
-  max-height: 600px;
+  max-height: 540px;
   width: 100vw;
   max-width: ${(props: { maxWidth: string }) => props.maxWidth};
   user-select: none;

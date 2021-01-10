@@ -4,6 +4,7 @@ import Link from "next/link";
 const LogoSvg = styled.svg`
   width: 200px;
   max-height: 60px;
+  cursor: pointer;
 `;
 
 const DevBrackets = styled.path`

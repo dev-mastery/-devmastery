@@ -41,6 +41,7 @@ const LogoWrapper = styled.div`
 `;
 
 const Body = styled.main`
+  margin-top: 56px;
   height: 100%;
   width: 100%;
   color: ${({ theme }) =>

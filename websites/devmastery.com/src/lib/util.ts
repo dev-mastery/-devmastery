@@ -36,3 +36,25 @@ export function isTwitter({ url }) {
         !pathname.includes("/edit/")))
   );
 }
+
+export function looseMatch(a: string, b: string, locale?: Locale): boolean {
+  if (a == null || b == null) {
+    return false;
+  }
+  return a.toLocaleLowerCase(locale) === b.toLocaleLowerCase(locale);
+}
+
+export function looseMatchAny(
+  a: string[],
+  b: string,
+  locale?: Locale
+): boolean {
+  let match = false;
+  for (let s of a) {
+    if (looseMatch(s, b, locale)) {
+      match = true;
+      break;
+    }
+  }
+  return match;
+}

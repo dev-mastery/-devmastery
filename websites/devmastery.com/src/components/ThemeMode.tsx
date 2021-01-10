@@ -22,7 +22,7 @@ export default function ThemeMode({ text }: { text: object }) {
       onKeyUp={changeMode}
       onClick={changeMode}
       role="button"
-      title={t["lightMode"]}
+      title={t["Switch to light mode."]}
       fill={theme.colors.warning}
       style={{ marginBottom: "-2px" }}
     />
@@ -34,7 +34,7 @@ export default function ThemeMode({ text }: { text: object }) {
       onClick={changeMode}
       fill={theme.colors.warning}
       role="button"
-      title={t["darkMode"]}
+      title={t["Switch to dark mode."]}
       style={{ marginBottom: "-2px" }}
     />
   );
