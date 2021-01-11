@@ -434,7 +434,7 @@ async function makeContentItem({
         })
       : dateCreated,
     id: makeId({ slug, locale }),
-    length: frontMatter.length ?? readingTime(body).minutes,
+    length: Math.round(frontMatter.length ?? readingTime(body).minutes),
     locale,
     title: frontMatter.title ?? slug.replaceAll("-", " "),
     slug,
