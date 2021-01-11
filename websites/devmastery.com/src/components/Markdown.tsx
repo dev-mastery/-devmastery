@@ -37,10 +37,11 @@ export default function Markdown({
 
 function renderCode({ language, value }) {
   nightOwl.hljs.borderRadius = 4;
+  nightOwl.hljs.fontSize = "1rem";
 
   return (
     <SyntaxHighlighter
-      showLineNumbers={true}
+      showLineNumbers={false}
       wrapLongLines={true}
       language={language}
       value={value}
@@ -73,14 +74,14 @@ function renderImage(props: { src: string; alt?: string }) {
   let width = query.get("w") ?? query.get("width") ?? defaultImageSize.width;
   let height = query.get("h") ?? query.get("height") ?? defaultImageSize.height;
   return (
-    <div style={{ textAlign: "center" }}>
+    <p style={{ textAlign: "center" }}>
       <Image
         src={src}
         alt={props.alt}
         width={Number(width)}
         height={Number(height)}
       />
-    </div>
+    </p>
   );
 }
 
