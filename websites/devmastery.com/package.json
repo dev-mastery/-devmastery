@@ -13,6 +13,7 @@
     "@emotion/react": "^11.1.2",
     "@emotion/styled": "^11.0.0",
     "@types/js-yaml": "^4.0.0",
+    "caniuse-lite": "^1.0.30001190",
     "dictionary-en-us": "^3.0.0",
     "gray-matter": "^4.0.2",
     "i18next": "^19.8.4",
