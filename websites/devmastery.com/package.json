@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@agentofuser/remark-oembed": "^1.0.4",
-    "@devmastery/error": "^0.0.2",
+    "@devmastery/error": "^0.0.3",
     "@emotion/react": "^11.1.2",
     "@emotion/styled": "^11.0.0",
     "@types/js-yaml": "^4.0.0",

@@ -35,6 +35,6 @@
     "retext-english": "^3.0.4",
     "retext-stringify": "^2.0.4",
     "unified": "^9.2.0",
-    "@devmastery/error": "^0.0.2"
+    "@devmastery/error": "^0.0.3"
   }
 }
