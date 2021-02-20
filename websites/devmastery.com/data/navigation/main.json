@@ -1,0 +1,27 @@
+[
+  {
+    "slug": "articles",
+    "priority": 10,
+    "en": "Articles",
+    "fr": "Articles"
+  },
+  {
+    "slug": "videos",
+    "priority": 20,
+    "en": "Videos",
+    "fr": "Vidéos"
+  },
+  { "slug": "podcasts", "priority": 30, "en": "Podcasts", "fr": "Podcasts" },
+  {
+    "slug": "books",
+    "priority": 40,
+    "en": "Books",
+    "fr": "Livres"
+  },
+  {
+    "slug": "courses",
+    "priority": 40,
+    "en": "Courses",
+    "fr": "Cours"
+  }
+]

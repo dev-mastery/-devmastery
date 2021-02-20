@@ -3,19 +3,9 @@ import Hero from "../components/Hero";
 import Image from "next/image";
 import styled from "@emotion/styled";
 import { GetStaticProps, GetStaticPropsContext } from "next";
-import * as Content from "../content";
-import type { ContentItem } from "../content";
-import Markdown from "../components/Markdown";
 import { getPageText } from "../lib/translation";
 import PostList from "../components/PostList";
-
-const slug = "initial-offer";
-const postContentType = "post";
-
-interface Offer extends ContentItem {
-  callToAction: string;
-  imageCaption: string;
-}
+import * as postService from "../post";
 
 const PrimaryButton = styled.a`
   border: none;
@@ -37,19 +27,17 @@ const PageTitle = styled.h1`
   margin: 0;
 `;
 
-export default function Home({
-  offer,
-  posts,
-  text,
-}: {
-  offer: Offer;
-  posts: ContentItem[];
+export default function Home(props: {
+  // offer: Offer;
+  posts: Awaited<ReturnType<typeof postService.browseLatest>>;
   text: { homepage: object };
 }) {
-  let t = text.homepage ?? {};
+  // let t = text.homepage ?? {};
+  let posts = React.useMemo(() => props.posts, []);
   return (
     <>
-      <Hero
+      <PostList posts={posts} />
+      {/* <Hero
         imageCaption={offer.imageCaption}
         imageSrc={offer.image}
         maxWidth="1366px"
@@ -57,28 +45,25 @@ export default function Home({
         <Markdown>{offer.body}</Markdown>
         <PrimaryButton>{offer.callToAction}</PrimaryButton>
       </Hero>
-      <PostList posts={posts} />
+      // <PostList posts={posts} /> */}
     </>
   );
 }
 
-export const getStaticProps: GetStaticProps = async function ({
-  locale,
-  defaultLocale,
-}: GetStaticPropsContext) {
-  let offer: Offer = (
-    await Content.findBySlug({
-      slug: "initial-offer",
-      locale: locale as Locale,
-    })
-  )[0] as Offer;
-  console.log(await Content.getCategories());
-  let text = await getPageText({ locale, pageName: "homepage" });
-  let posts = await Content.getLatest({
-    type: "Post",
-    max: 8,
-    locale: (locale ?? defaultLocale) as Locale,
+const maxPosts = 8;
+export const getStaticProps: GetStaticProps = async function (
+  props: GetStaticPropsContext
+) {
+  let locale = (props.locale ?? props.defaultLocale) as Locale;
+
+  let text = await getPageText({
+    locale,
+    pageName: "homepage",
   });
 
-  return { props: { offer, posts, text } };
+  let posts = await postService.browseLatest({ locale, max: maxPosts });
+
+  // let offer = await offers.getInitialOffer({ locale });
+  // return { props: { offer, posts: postList, text } };
+  return { props: { posts, text } };
 };

@@ -1,5 +1,5 @@
 import text from "./text.json";
-import languages from "./language-codes.json";
+import languages from "../language-codes.json";
 import i18n from "i18next";
 import config from "../../../locales.config";
 // NB: make sure translation happens at build time, not runtime.
@@ -18,12 +18,13 @@ const defaultMergeParams = {
   },
 };
 
+let resources = toI18NextResources(text);
 async function init() {
   if (!i18n.isInitialized) {
     return i18n.init({
       fallbackLng: config.defaultLocale,
       ns: ["header", "footer", "homepage"],
-      resources: toI18NextResources(text),
+      resources,
       supportedLngs: config.locales,
     });
   }

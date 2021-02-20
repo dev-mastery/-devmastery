@@ -3,6 +3,8 @@ import AppLayout from "../components/AppLayout";
 import { css, Global } from "@emotion/react";
 import ThemeProvider from "../theme/ThemeProvider";
 import theme from "../theme";
+import "../styles/code.css";
+
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>

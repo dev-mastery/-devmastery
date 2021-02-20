@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
 import Link from "next/link";
+import * as React from "react";
 import { BiPlayCircle as PlayIcon } from "react-icons/bi";
-import type { ContentItem } from "../content";
+import type { PostPreview } from "../post";
 
 const PostGrid = styled.div`
   display: grid;
@@ -50,7 +51,7 @@ const PostBlock = styled.section`
       }`};
   }
 
-  transition: box-shadow 0.3s, margin-top 0.3s;
+  transition: all 0.3s ease-out;
 `;
 
 const PostTitle = styled.h2`
@@ -67,7 +68,7 @@ const PostImage = styled.div`
   border-radius: 16px;
 `;
 
-const PostSummary = styled.p``;
+const Summary = styled.p``;
 
 const PostText = styled.div`
   padding: 1rem;
@@ -92,7 +93,7 @@ const PostCategory = styled.small`
 
 const PostMeta = styled.small`
   border-radius: 2px;
-  color: ${(props) => props.theme.colors.medium};
+  color: ${(props) => props.theme.colors.primary};
   cursor: pointer;
   display: block;
   font-size: 0.8rem;
@@ -103,7 +104,10 @@ const PostMeta = styled.small`
   user-select: none;
 `;
 
-export default function PostList({ posts }: { posts: ContentItem[] }) {
+export type PostListProps = { posts: PostPreview[] };
+export default React.memo(PostList);
+
+function PostList({ posts }: PostListProps) {
   return (
     <PostGrid>
       {posts.map((post) => (
@@ -111,12 +115,13 @@ export default function PostList({ posts }: { posts: ContentItem[] }) {
           <PostBlock>
             <PostImage>
               <Image
-                src={`/images/${post.slug}/${post.image}`}
+                src={`/images/${post.slug}/${post.image.src}`}
                 layout="fill"
                 objectFit="cover"
+                alt={post.image.caption}
               ></Image>
-              {post.section === "Videos" ||
-                (post.section === "Podcasts" && (
+              {post.category === "Videos" ||
+                (post.category === "Podcast" && (
                   <PlayIcon
                     size="200"
                     opacity="0.5"
@@ -132,11 +137,10 @@ export default function PostList({ posts }: { posts: ContentItem[] }) {
             </PostImage>
             <PostText>
               <PostMeta>
-                {post.topic} | {Math.round(post.length)} minutes
+                {post.topic} • {post.durationInMinutes} minutes
               </PostMeta>
-              {/* <PostCategory>{post.category}</PostCategory> */}
               <PostTitle>{post.title}</PostTitle>
-              <PostSummary>{post.summary}</PostSummary>
+              <Summary>{post.summary}</Summary>
             </PostText>
           </PostBlock>
         </Link>

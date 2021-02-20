@@ -33,7 +33,7 @@ export default {
     white: "#ffffff",
     dark: "#222222",
     light: "#f5f5f5",
-    brand: "#7ae582",
+    brand: "#009933",
     accent: "#00a5cf",
     strong: "#004e64",
     soft: "#9fffcb",

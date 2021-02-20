@@ -4,9 +4,7 @@ import type {
   GetStaticProps,
   GetStaticPropsContext,
 } from "next";
-import type { ContentItem } from "../../content";
-import * as Content from "../../content";
-import Markdown from "../../components/Markdown";
+import { listSlugs, viewPost } from "../../post";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import Link from "next/link";
@@ -47,6 +45,8 @@ import {
   WhatsappShareButton,
   WorkplaceShareButton,
 } from "react-share";
+import * as React from "react";
+import { Language } from "../../common/entities";
 
 const Post = styled.article`
   width: 96vw;
@@ -73,6 +73,12 @@ const Post = styled.article`
     text-decoration: underline;
   }
   font-family: ${(props) => props.theme.fonts.body};
+`;
+
+const PostBody = styled.section`
+  & > * img {
+    max-width: 36rem;
+  }
 `;
 
 const PostTitle = styled.h1`
@@ -134,24 +140,36 @@ const PostTools = styled.span`
   justify-items: center;
   align-items: center;
 `;
+
 function getCurrentUrl() {
   if (typeof window !== "undefined") {
     return window.location.href;
   }
 }
-export default function PostPage({ post }: { post: ContentItem }) {
-  let router = useRouter();
 
+type PostPageProps = Awaited<ReturnType<typeof viewPost>>;
+
+export default React.memo(PostPage);
+
+function PostPage({
+  author,
+  datePublished,
+  durationInMinutes,
+  bodyAsHtml,
+  image,
+  language,
+  slug,
+  title,
+}: PostPageProps) {
   return (
     <Post>
-      <PostTitle>{post.title}</PostTitle>
+      <PostTitle>{title}</PostTitle>
       <PostByline>
-        {post.author} ✦ {post.datePublished} ✦ {post.length} minutes
+        {author} ✦ {datePublished} ✦ {durationInMinutes} minutes
       </PostByline>
-
       <PostImage>
         <Image
-          src={`/images/${post.slug}/${post.image}`}
+          src={`/images/${slug}/${image.src}`}
           layout="fill"
           objectFit="cover"
         ></Image>
@@ -173,44 +191,37 @@ export default function PostPage({ post }: { post: ContentItem }) {
           </FacebookShareButton>
           <TextSizeIcon size={20} />
           <Link
-            href={`https://github.com/dev-mastery/devmastery/tree/main/websites/devmastery.com/documents/${post.slug}/index.${post.locale}.md`}
+            href={`https://github.com/dev-mastery/devmastery/edit/main/websites/devmastery.com/documents/${slug}/index.${language.locale}.md`}
           >
-            <GithubIcon size={20} />
+            <EditIcon size={20} style={{ cursor: "pointer" }} />
           </Link>
           <TranslateIcon size={20} />
         </PostTools>
       </PostToolbar>
-      <Markdown>{post.body}</Markdown>
+      <PostBody dangerouslySetInnerHTML={{ __html: bodyAsHtml }} />
     </Post>
   );
 }
 
-export const getStaticProps: GetStaticProps = async function ({
+export const getStaticProps: GetStaticProps<PostPageProps> = async function ({
   locale,
   defaultLocale,
   params,
 }: GetStaticPropsContext) {
-  let posts: ContentItem[] = await Content.findBySlug({
+  let post = await viewPost({
     slug: params.slug as string,
-    locale: locale as Locale,
+    locale: (locale ?? defaultLocale) as Locale,
   });
-  if (!posts?.length) {
-    posts = await Content.findBySlug({
-      slug: params.slug as string,
-      locale: defaultLocale as Locale,
-    });
-  }
-  let post = posts[0];
   return {
     notFound: post == null,
-    props: { post },
+    props: post,
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async function (
   _context: GetStaticPathsContext
 ) {
-  let slugs = await Content.getSlugs({ type: "Post" });
+  let slugs = await listSlugs();
   let paths = slugs.map((slug) => ({ params: { slug } }));
   return { paths, fallback: false };
 };

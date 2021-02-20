@@ -58,3 +58,15 @@ export function looseMatchAny(
   }
   return match;
 }
+
+export function isNull(value: any): boolean {
+  return value == null;
+}
+
+export function isNullOrEmptyString(value: string): boolean {
+  return isNull(value) || value.trim().length < 1;
+}
+
+export function isNullOrEmptyArray(value: Array<any>): boolean {
+  return isNull(value) || value.length < 1;
+}

@@ -9,6 +9,7 @@ const Container = styled.div`
   width: 100vw;
   min-height: 100vh;
   grid-template-rows: auto minmax(auto, 90px);
+  transition: all 1s ease-out;
 `;
 
 const Header = styled.div`
@@ -19,13 +20,13 @@ const Header = styled.div`
   height: 56px;
   width: 100%;
   background-color: ${({ theme }) =>
-    theme.mode === "dark" ? theme.colors.dark : theme.colors.accent};
+    theme.mode === "dark" ? theme.colors.black : theme.colors.brand};
   justify-content: center;
   align-content: center;
   display: grid;
   z-index: 200;
   position: fixed;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.accent};
+  /* border-bottom: 2px solid ${({ theme }) => theme.colors.accent}; */
 `;
 
 const TopBar = styled.section`

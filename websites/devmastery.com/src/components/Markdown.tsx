@@ -1,7 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 import emoji from "remark-emoji";
-import oembed from "@agentofuser/remark-oembed";
 import { PluggableList } from "unified";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import nightOwl from "react-syntax-highlighter/dist/cjs/styles/hljs/night-owl";
@@ -30,22 +29,22 @@ export default function Markdown({
     <ReactMarkdown
       renderers={{ ...baseRenderers, ...renderers }}
       children={children}
-      plugins={[gfm, emoji, oembed, ...plugins]}
+      plugins={[gfm, emoji, ...plugins]}
     />
   );
 }
 
 function renderCode({ language, value }) {
-  nightOwl.hljs.borderRadius = 4;
-  nightOwl.hljs.fontSize = "1rem";
+  // nightOwl.hljs.borderRadius = 4;
+  // nightOwl.hljs.fontSize = "1rem";
 
   return (
     <SyntaxHighlighter
       showLineNumbers={false}
-      wrapLongLines={true}
+      wrapLongLines={false}
       language={language}
-      value={value}
-      style={nightOwl}
+      // style={nightOwl}
+      useInlineStyles={false}
     >
       {value}
     </SyntaxHighlighter>
