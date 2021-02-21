@@ -51,7 +51,7 @@ const PostBlock = styled.section`
       }`};
   }
 
-  transition: all 0.3s ease-out;
+  transition: box-shadow 0.3s ease-out, margin-top 0.3s ease-out;
 `;
 
 const PostTitle = styled.h2`
