@@ -1,23 +1,10 @@
-import { ContentId } from "../../common/entities";
-import { Post } from "../entities/post";
-import { postFromMarkdown } from "../helpers/from-markdown";
-
-export type ReadDirFn = ({ path: string }) => string[];
-export type MakePathFn = (...args: any[]) => string;
-export type ReadFileFn = ({ path: string }) => FileInfo;
-export type FileExistsFn = ({ path: string }) => boolean;
-
-interface FileInfo {
-  contents: string;
-  createdAt: number;
-  modifiedAt: number;
-}
-
-export type PostData = ReturnType<typeof makeDataStore>;
+import type { ContentId } from "../../common/entities";
+import type { Post } from "../entities/post";
 
 export function makeDataStore({
   fileExists,
   makePath,
+  postFromMarkdown,
   postsRoot,
   readDir,
   readFile,
@@ -25,6 +12,7 @@ export function makeDataStore({
 }: {
   fileExists: FileExistsFn;
   makePath: MakePathFn;
+  postFromMarkdown: PostFromMarkdownFn;
   postsRoot: string;
   readDir: ReadDirFn;
   readFile: ReadFileFn;
@@ -109,3 +97,24 @@ export function makeDataStore({
     getTopics: async () => topics,
   });
 }
+
+type ReadDirFn = ({ path: string }) => string[];
+type MakePathFn = (...args: any[]) => string;
+type ReadFileFn = ({ path: string }) => FileInfo;
+type FileExistsFn = ({ path: string }) => boolean;
+type PostFromMarkdownFn = (props: {
+  dateCreated: number;
+  dateModified: number;
+  markdown: string;
+  locale: Locale;
+  translations?: Locale[];
+  slug: string;
+}) => Post;
+
+interface FileInfo {
+  contents: string;
+  createdAt: number;
+  modifiedAt: number;
+}
+
+export type PostData = ReturnType<typeof makeDataStore>;

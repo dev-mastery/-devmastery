@@ -6,13 +6,15 @@ import {
 } from "../../common/helpers/file-system";
 import { makeDataStore } from "./post-data";
 import localeConfig from "../../../locales.config";
+import { postFromMarkdown } from "../helpers/from-markdown";
 
 const postsRoot = makePath(process.cwd(), "data", "posts");
 export const postData = makeDataStore({
-  postsRoot,
-  makePath,
-  readFile,
-  readDir,
   fileExists,
+  makePath,
+  postFromMarkdown,
+  postsRoot,
+  readDir,
+  readFile,
   supportedLocales: localeConfig.locales as Locale[],
 });
