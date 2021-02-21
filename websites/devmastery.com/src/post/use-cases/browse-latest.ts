@@ -1,4 +1,4 @@
-import { Post } from "../entities";
+import type { Post } from "../entities";
 import * as sort from "../helpers/sort";
 import { preview } from "../helpers/preview";
 
