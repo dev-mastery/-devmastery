@@ -2,11 +2,13 @@ import { OperationalError } from "@devmastery/error";
 
 export type Duration = ReturnType<typeof durationFrom>;
 
-const wordsPerMinute = 200;
-export function minutesToRead(text: string) {
+export function minutesToRead(
+  text: string,
+  options: { wordsPerMinute: number } = { wordsPerMinute: 200 }
+) {
   let minutes = 0;
   if (Boolean(text?.length)) {
-    minutes = text.split(" ").length / wordsPerMinute;
+    minutes = text.split(" ").length / options.wordsPerMinute;
   }
   return durationFrom(minutes);
 }
