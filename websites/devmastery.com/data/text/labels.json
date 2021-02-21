@@ -22,5 +22,9 @@
   "youtube": {
     "en": "Dev Mastery YouTube Channel",
     "fr": "Dev Mastery sur YouTube"
+  },
+  "minutes": {
+    "en": "Minutes",
+    "fr": "Minutes"
   }
 }
