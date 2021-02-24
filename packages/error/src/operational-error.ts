@@ -1,19 +1,23 @@
 export class OperationalError extends Error {
-  #context?: ErrorContext;
+  #context?: string;
   #severity: ErrorSeverity;
+  #mergeFields: MergeFields;
 
   constructor({
     context,
+    mergeFields,
     message,
     severity = "High",
   }: {
-    context?: ErrorContext;
+    context?: string;
+    mergeFields?: MergeFields;
     message?: string;
     severity?: ErrorSeverity;
   } = {}) {
     super(message);
     this.#context = context;
     this.#severity = severity;
+    this.#mergeFields = mergeFields;
   }
 
   static isOperationalError(error: Error): error is OperationalError {
@@ -32,14 +36,20 @@ export class OperationalError extends Error {
     return this.constructor.name;
   }
 
+  get mergeFields() {
+    return this.#mergeFields;
+  }
+
   toPlainObject() {
     return Object.freeze({
       context: this.context,
+      mergeFields: this.mergeFields,
       message: this.message,
       name: this.name,
       severity: this.severity,
     });
   }
 }
-type ErrorContext = { [key: string]: any };
+
+type MergeFields = { [key: string]: { toString(): string } };
 type ErrorSeverity = "High" | "Medium" | "Low";
