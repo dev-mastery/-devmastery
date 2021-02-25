@@ -24,7 +24,7 @@ export function durationFrom(number: number) {
 
 function validateDuration(value: number) {
   if (!isValidDuration(value)) {
-    throw new InvalidDurationError();
+    throw new InvalidDurationError(value);
   }
 }
 
@@ -33,10 +33,11 @@ export function isValidDuration(value: number) {
 }
 
 class InvalidDurationError extends OperationalError {
-  constructor(context?: object) {
+  constructor(value: number) {
     super({
-      context,
-      message: "Invalid duration. Duration must be a positive whole number.",
+      context: "Attempting to create a Post duration",
+      message: `${value} is not a valid duration. Durations must be positive whole numbers.`,
+      mergeFields: { duration: value },
     });
   }
 }
