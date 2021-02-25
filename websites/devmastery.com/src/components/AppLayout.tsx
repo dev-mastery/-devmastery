@@ -69,7 +69,7 @@ export default function AppLayout({
       <Header>
         <TopBar>
           <LogoWrapper>
-            <Logo text={text?.header} />
+            <Logo text={text?.header?.logo} />
           </LogoWrapper>
           <Menu text={text?.header} />
         </TopBar>
@@ -79,3 +79,5 @@ export default function AppLayout({
     </Container>
   );
 }
+
+interface text {}
