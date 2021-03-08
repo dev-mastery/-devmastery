@@ -74,3 +74,4 @@ common/autoinstallers/*/.npmrc
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+.idea
