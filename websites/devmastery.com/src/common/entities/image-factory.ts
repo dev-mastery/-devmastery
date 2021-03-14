@@ -12,15 +12,15 @@ export function imageFrom(uri: NonEmptyString, caption?: NonEmptyString) {
     height:
       url.searchParams.has("h") || url.searchParams.has("height")
         ? Number(url.searchParams?.get("h") ?? url.searchParams?.get("height"))
-        : null,
+        : 480,
     quality: url.searchParams.has("q")
       ? Number(url.searchParams?.get("q"))
-      : null,
+      : 75,
     src: uri.toString(),
     width:
       url.searchParams.has("w") || url.searchParams.has("width")
         ? Number(url.searchParams?.get("w") ?? url.searchParams?.get("width"))
-        : null,
+        : 640,
     caption: caption?.toString() ?? null,
   });
 }

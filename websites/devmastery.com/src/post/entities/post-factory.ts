@@ -2,13 +2,13 @@ import type {
   NonEmptyString,
   ContentId,
   Language,
-  Slug,
-  Image,
+  SlugFactory,
+  ImageFactory,
 } from "../../common/entities";
-import type { Summary } from "./summary";
-import type { Duration } from "./duration";
+import type { SummaryFactory } from "./summary-factory";
+import type { DurationFactory } from "./duration-factory";
 
-const dateOptions = {
+const dateOptions: Intl.DateTimeFormatOptions = {
   month: "long",
   year: "numeric",
   day: "numeric",
@@ -26,12 +26,12 @@ export function postOf(props: {
   dateCreated: Date;
   dateModified: Date;
   datePublished?: Date;
-  duration: Duration;
+  duration: DurationFactory;
   id: ContentId;
-  image?: Image;
+  image?: ImageFactory;
   language: Language;
-  slug: Slug;
-  summary: Summary;
+  slug: SlugFactory;
+  summary: SummaryFactory;
   tags?: string[];
   title: NonEmptyString;
   topic: NonEmptyString;

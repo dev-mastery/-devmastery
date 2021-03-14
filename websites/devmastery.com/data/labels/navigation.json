@@ -1,0 +1,7 @@
+{
+  "articles": { "en": "Articles", "fr": "Articles" },
+  "videos": { "en": "Videos", "fr": "Vidéos" },
+  "podcasts": { "en": "Podcasts", "fr": "Podcasts" },
+  "books": { "en": "Books", "fr": "Livres" },
+  "courses": { "en": "Courses", "fr": "Cours" }
+}
