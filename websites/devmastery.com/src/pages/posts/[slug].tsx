@@ -12,9 +12,9 @@ import {
   MdTranslate as TranslateIcon,
   MdModeEdit as EditIcon,
   MdFormatSize as TextSizeIcon,
-  MdModeComment as CommentIcon,
-  MdFavorite as FavoritedIcon,
-  MdFavoriteBorder as FavoriteIcon,
+  // MdModeComment as CommentIcon,
+  // MdFavorite as FavoritedIcon,
+  // MdFavoriteBorder as FavoriteIcon,
   MdMail as MailIcon,
 } from "react-icons/md";
 import {
@@ -23,30 +23,30 @@ import {
   FaGithub as GithubIcon,
   FaFacebook as FacebookIcon,
 } from "react-icons/fa";
-import { useRouter } from "next/router";
+import * as labels from "../../label";
 import {
   EmailShareButton,
   FacebookShareButton,
-  HatenaShareButton,
-  InstapaperShareButton,
-  LineShareButton,
-  LinkedinShareButton,
-  LivejournalShareButton,
-  MailruShareButton,
-  OKShareButton,
-  PinterestShareButton,
-  PocketShareButton,
+  // HatenaShareButton,
+  // InstapaperShareButton,
+  // LineShareButton,
+  // LinkedinShareButton,
+  // LivejournalShareButton,
+  // MailruShareButton,
+  // OKShareButton,
+  // PinterestShareButton,
+  // PocketShareButton,
   RedditShareButton,
-  TelegramShareButton,
-  TumblrShareButton,
+  // TelegramShareButton,
+  // TumblrShareButton,
   TwitterShareButton,
-  ViberShareButton,
-  VKShareButton,
-  WhatsappShareButton,
-  WorkplaceShareButton,
+  // ViberShareButton,
+  // VKShareButton,
+  // WhatsappShareButton,
+  // WorkplaceShareButton,
 } from "react-share";
 import * as React from "react";
-import { Language } from "../../common/entities";
+// import { LanguageFactory } from "../../common/entities";
 
 const Post = styled.article`
   width: 96vw;
@@ -172,6 +172,8 @@ function PostPage({
           src={`/images/${slug}/${image.src}`}
           layout="fill"
           objectFit="cover"
+          title={image.caption}
+          alt={image.caption}
         ></Image>
       </PostImage>
       <PostToolbar>
@@ -203,25 +205,29 @@ function PostPage({
   );
 }
 
-export const getStaticProps: GetStaticProps<PostPageProps> = async function ({
-  locale,
-  defaultLocale,
-  params,
-}: GetStaticPropsContext) {
-  let post = await viewPost({
-    slug: params.slug as string,
-    locale: (locale ?? defaultLocale) as Locale,
+export const getStaticProps: GetStaticProps<PostPageProps> = async function (
+  props: GetStaticPropsContext
+) {
+  const locale = (props.locale ?? props.defaultLocale) as Locale;
+  const post = await viewPost({
+    slug: props.params.slug as string,
+    locale,
+  });
+  const t = await labels.translate({
+    namespace: "glossary",
+    locale,
   });
   return {
     notFound: post == null,
-    props: post,
+    props: { ...post, t, menuItems: [] },
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async function (
   _context: GetStaticPathsContext
 ) {
-  let slugs = await listSlugs();
-  let paths = slugs.map((slug) => ({ params: { slug } }));
+  const slugs = await listSlugs();
+  const paths = slugs.map((slug) => ({ params: { slug } }));
+
   return { paths, fallback: false };
 };

@@ -1,6 +1,6 @@
 import { makeLabelDataStore } from "../data-store/label-data";
 import { makeTranslateLabel } from "./translate-label";
-import {makeTranslateLayout} from "./translate-layout";
+import { makeTranslateLayout } from "./translate-layout";
 import { interpolate } from "../helpers/interpolate";
 import { locales } from "../../../locales.config";
 

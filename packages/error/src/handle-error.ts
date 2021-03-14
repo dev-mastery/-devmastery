@@ -1,9 +1,9 @@
 import { OperationalError } from "./operational-error";
 
 interface Logger {
-  debug(info: object): void;
-  warn(info: object): void;
-  error(info: object): void;
+  debug(info: Record<string, unknown>): void;
+  warn(info: Record<string, unknown>): void;
+  error(info: Record<string, unknown>): void;
 }
 
 export function makeHandleError({ logger }: { logger: Logger }) {
@@ -15,7 +15,7 @@ export function makeHandleError({ logger }: { logger: Logger }) {
       throw error;
     }
 
-    let errorInfo = error.toPlainObject();
+    const errorInfo = error.toPlainObject();
 
     switch (error.severity) {
       case "Medium":

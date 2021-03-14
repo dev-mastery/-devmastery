@@ -8,22 +8,22 @@ export function makeBrowseCategory({ postData }: { postData: PostData }) {
     locale: Locale;
     maxPerPage?: number;
   }) {
-    let targetCategory = nonEmptyString("Category", category);
-    let criteria = (post: Post) =>
+    const targetCategory = nonEmptyString("Category", category);
+    const criteria = (post: PostFactory) =>
       post.language.locale === locale && post.category.equals(targetCategory);
-    let found = await postData.find(criteria);
-    let previews = sort.newToOld(found)?.map(preview) ?? [];
+    const found = await postData.find(criteria);
+    const previews = sort.newToOld(found)?.map(preview) ?? [];
     maxPerPage = maxPerPage ?? previews.length;
     return paginate({ list: previews, maxPerPage });
   };
 }
 
 interface PostData {
-  find(predicate: (p: Post) => boolean): Promise<Post[]>;
+  find(predicate: (p: PostFactory) => boolean): Promise<PostFactory[]>;
 }
 
 import { paginate } from "../helpers/paginate";
 import { nonEmptyString } from "../../common/entities";
-import { Post } from "../entities";
+import { PostFactory } from "../entities";
 import * as sort from "../helpers/sort";
 import { preview } from "../helpers/preview";

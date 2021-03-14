@@ -71,4 +71,4 @@ export function postOf(props: {
   });
 }
 
-export type Post = ReturnType<typeof postOf>;
+export type PostFactory = ReturnType<typeof postOf>;

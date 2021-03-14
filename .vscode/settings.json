@@ -1,0 +1,10 @@
+{
+  "eslint.format.enable": true,
+  "eslint.alwaysShowStatus": true,
+  "eslint.packageManager": "yarn",
+  "prettier.configPath": "~/code/@devmastery/.prettierrc",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "typescriptHero.imports.stringQuoteStyle": "\"",
+
+}

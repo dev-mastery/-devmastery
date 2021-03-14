@@ -2,10 +2,10 @@
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "./dist",
-    "module": "es6",
+    "module": "ESNEXT",
     "noImplicitAny": true,
     "outDir": "./dist",
-    "target": "es6"
+    "target": "ES2015"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

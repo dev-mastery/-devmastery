@@ -1,5 +1,7 @@
-import typescript from "rollup-plugin-typescript2";
+import typescriptPlugin from "rollup-plugin-typescript2";
 import pkg from "./package.json";
+import typescript from "typescript";
+
 export default {
   input: "src/index.ts",
   output: [
@@ -17,8 +19,8 @@ export default {
     ...Object.keys(pkg.peerDependencies || {}),
   ],
   plugins: [
-    typescript({
-      typescript: require("typescript"),
+    typescriptPlugin({
+      typescript,
     }),
   ],
 };

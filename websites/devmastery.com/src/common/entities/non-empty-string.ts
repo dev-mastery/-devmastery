@@ -31,7 +31,7 @@ export function isValidNonEmptyString(value: string): boolean {
 class EmptyStringError extends OperationalError {
   constructor(label: string) {
     super({
-      context: { fieldName: label },
+      mergeFields: { fieldName: label },
       message: `${label} cannot be empty.`,
     });
   }
@@ -40,7 +40,7 @@ class EmptyStringError extends OperationalError {
 class NullStringError extends OperationalError {
   constructor(label: string) {
     super({
-      context: { fieldName: label },
+      mergeFields: { fieldName: label },
       message: `${label} cannot be null.`,
     });
   }

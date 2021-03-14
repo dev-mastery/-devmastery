@@ -1,5 +1,5 @@
 import fs from "fs";
-import path from "path";
+import fsPath from "path";
 
 interface FileInfo {
   createdAt: number;
@@ -8,7 +8,7 @@ interface FileInfo {
   path: string;
 }
 
-export const makePath = path.join;
+export const makePath = fsPath.join;
 
 export const fileExists = pathExists;
 export const folderExists = pathExists;
@@ -32,8 +32,8 @@ export function isFile({ path }: { path: string }): boolean {
 }
 
 export function readFile({ path }: { path: string }): FileInfo {
-  let stat = fs.statSync(path);
-  let contents = fs.readFileSync(path, { encoding: "utf8" });
+  const stat = fs.statSync(path);
+  const contents = fs.readFileSync(path, { encoding: "utf8" });
 
   return {
     createdAt: stat.ctimeMs,

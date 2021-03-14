@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import Image from "next/image";
 import Logo from "./Logo";
 import Menu from "./Menu";
+import type { MenuItem } from "./Menu";
 import { PropsWithChildren } from "react";
 
 const Container = styled.div`
@@ -62,22 +63,24 @@ const Footer = styled.small`
 
 export default function AppLayout({
   children,
-  text,
-}: PropsWithChildren<{ text?: { header: object; footer: object } }>) {
+  t,
+  menuItems,
+}: PropsWithChildren<{
+  t?: { [key: string]: string };
+  menuItems: MenuItem[];
+}>) {
   return (
     <Container>
       <Header>
         <TopBar>
           <LogoWrapper>
-            <Logo text={text?.header?.logo} />
+            <Logo title={t["Dev Mastery logo."]} />
           </LogoWrapper>
-          <Menu text={text?.header} />
+          <Menu items={menuItems} t={t} />
         </TopBar>
       </Header>
       <Body>{children}</Body>
-      <Footer>{text?.footer["copyright"]}</Footer>
+      <Footer>{t["Copyright Dev Mastery. All rights reserved."]}</Footer>
     </Container>
   );
 }
-
-interface text {}

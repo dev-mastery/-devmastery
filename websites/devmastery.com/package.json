@@ -2,10 +2,12 @@
   "name": "@devmastery/devmastery.com",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest"
   },
   "dependencies": {
     "@agentofuser/remark-oembed": "^1.0.4",
@@ -13,13 +15,16 @@
     "@emotion/react": "^11.1.2",
     "@emotion/styled": "^11.0.0",
     "@types/js-yaml": "^4.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
     "caniuse-lite": "^1.0.30001190",
     "dictionary-en-us": "^3.0.0",
+    "eslint": "^7.21.0",
     "gray-matter": "^4.0.2",
     "i18next": "^19.8.4",
     "image-size": "^0.9.3",
     "js-yaml": "^3.14.0",
-    "next": "10.0.3",
+    "next": "^10.0.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-i18next": "^11.7.4",
@@ -55,16 +60,27 @@
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.1.2",
+    "@types/babel__core": "^7.1.12",
+    "@types/faker": "^5.1.7",
     "@types/jest": "^26.0.19",
     "@types/js-yaml": "^4.0.0",
     "@types/react": "^17.0.0",
     "@types/react-syntax-highlighter": "^13.5.0",
     "@types/rss": "^0.0.28",
     "extra-watch-webpack-plugin": "^1.0.3",
+    "faker": "^5.4.0",
     "jest": "^26.6.3",
     "memfs": "^3.2.0",
     "rss": "^1.2.2",
     "ts-jest": "^26.4.4",
     "typescript": "^4.1.2"
+  },
+  "wallaby": {
+    "autoDetect": true,
+    "env": {
+      "params": {
+        "runner": "--experimental-vm-modules"
+      }
+    }
   }
 }

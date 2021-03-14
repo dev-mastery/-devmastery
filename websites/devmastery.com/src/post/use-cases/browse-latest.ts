@@ -1,9 +1,9 @@
-import type { Post } from "../entities";
+import type { PostFactory } from "../entities";
 import * as sort from "../helpers/sort";
 import { preview } from "../helpers/preview";
 
 interface PostData {
-  find(predicate: (p: Post) => boolean): Promise<Post[]>;
+  find(predicate: (p: PostFactory) => boolean): Promise<PostFactory[]>;
 }
 
 export function makeBrowseLatest({ postData }: { postData: PostData }) {
@@ -14,8 +14,8 @@ export function makeBrowseLatest({ postData }: { postData: PostData }) {
     locale: Locale;
     max: number;
   }) {
-    let filter = (post: Post) => post.language.locale == locale;
-    let found = await postData.find(filter);
+    const filter = (post: PostFactory) => post.language.locale == locale;
+    const found = await postData.find(filter);
     return sort.newToOld(found)?.map(preview)?.slice(0, max) ?? [];
   };
 }

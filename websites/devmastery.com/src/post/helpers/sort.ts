@@ -1,7 +1,8 @@
-import { Post } from "../entities";
+import { PostFactory } from "../entities";
 
-export function newToOld(posts: Post[]) {
+export function newToOld(posts: PostFactory[]) {
   return posts?.sort(
-    (a: Post, b: Post) => b.datePublished.getTime() - a.datePublished.getTime()
+    (a: PostFactory, b: PostFactory) =>
+      b.datePublished.getTime() - a.datePublished.getTime()
   );
 }

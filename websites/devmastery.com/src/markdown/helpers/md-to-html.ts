@@ -8,10 +8,11 @@ import raw from "rehype-raw";
 import urls from "rehype-urls";
 import codeblocks from "rehype-highlight";
 import html from "rehype-stringify";
-var merge = require("deepmerge");
-var gh = require("hast-util-sanitize/lib/github");
 
-var schema = merge(gh, { attributes: { "*": ["className"] } });
+const merge = require("deepmerge");
+const gh = require("hast-util-sanitize/lib/github");
+
+const schema = merge(gh, {attributes: {"*": ["className"]}});
 
 export function mdToHtml(markdown: string) {
   return unified()
@@ -51,8 +52,6 @@ function handleMedia(url: URL, node: HastNode) {
     let u = fixUrl(url);
     if (isYouTube({ url: u.href })) {
       return handleYouTubeVideo(u, node);
-    }
-    if (isTwitter({ url: u.href })) {
     }
     return handleImg(url, node);
   }
@@ -112,7 +111,7 @@ function handleImg(url: URL, node: HastNode) {
 
 function determineWidth(url: URL, sizes?: number[]) {
   if (!sizes) return 640;
-  sizes = sizes.sort();
+  sizes = sizes.sort((a, b) => a - b);
   let w = url.searchParams?.has("w") ? Number(url.searchParams.get("w")) : 640;
   if (sizes?.length && !sizes.includes(w)) {
     w = w < sizes[0] ? sizes[0] : sizes.filter((s) => s < w).pop();
@@ -151,15 +150,15 @@ function isYouTube({ url }) {
   );
 }
 
-function isTwitter({ url }) {
-  let { host, pathname } = new URL(url);
-
-  return (
-    ["twitter.com", "www.twitter.com"].includes(host) &&
-    (pathname.includes("/status/") ||
-      (["/events/", "/moments/", "/timelines/"].some((item) =>
-        pathname.includes(item)
-      ) &&
-        !pathname.includes("/edit/")))
-  );
-}
+// function isTwitter({ url }) {
+//   let { host, pathname } = new URL(url);
+//
+//   return (
+//     ["twitter.com", "www.twitter.com"].includes(host) &&
+//     (pathname.includes("/status/") ||
+//       (["/events/", "/moments/", "/timelines/"].some((item) =>
+//         pathname.includes(item)
+//       ) &&
+//         !pathname.includes("/edit/")))
+//   );
+// }

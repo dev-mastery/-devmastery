@@ -16,20 +16,23 @@ export function postFromMarkdown(props: {
   translations?: Locale[];
   slug: string;
 }) {
-  let markdown = markdownFrom<PostFrontmatter>(props.markdown);
-  let { frontmatter } = markdown;
-  let bodyText = markdown.toText();
-  let slug = slugOf(props.slug);
-  let imageUri = frontmatter.image
-    ? nonEmptyString("Post Image", frontmatter.image)
+  const markdown = markdownFrom<PostFrontmatter>(props.markdown);
+  const { frontmatter } = markdown;
+  const bodyText = markdown.toText();
+  const slug = slugOf(props.slug);
+  const imageUri = frontmatter.image
+    ? nonEmptyString("PostFactory ImageFactory", frontmatter.image)
     : null;
-  let imageCaption = frontmatter.imageCaption
-    ? nonEmptyString("Post Image Caption", frontmatter.imageCaption)
+  const imageCaption = frontmatter.imageCaption
+    ? nonEmptyString(
+        "PostFactory ImageFactory Caption",
+        frontmatter.imageCaption
+      )
     : undefined;
-  let image = imageUri ? imageFrom(imageUri, imageCaption) : null;
+  const image = imageUri ? imageFrom(imageUri, imageCaption) : null;
   return postOf({
-    author: nonEmptyString("Post Author", frontmatter.author),
-    category: nonEmptyString("Post Category", frontmatter.category),
+    author: nonEmptyString("PostFactory Author", frontmatter.author),
+    category: nonEmptyString("PostFactory Category", frontmatter.category),
     dateCreated: new Date(props.dateCreated),
     dateModified: new Date(props.dateModified),
     datePublished: new Date(frontmatter.datePublished ?? props.dateModified),
@@ -38,12 +41,12 @@ export function postFromMarkdown(props: {
       : minutesToRead(bodyText),
     id: contentIdFrom({ slug, locale: props.locale }),
     image,
-    language: languageFrom(props.locale as Locale),
+    language: languageFrom(props.locale),
     slug,
     summary: summaryFrom(frontmatter.summary ?? bodyText),
     tags: frontmatter.tags ?? [],
-    title: nonEmptyString("Post Title", frontmatter.title),
-    topic: nonEmptyString("Post Topic", frontmatter.topic),
+    title: nonEmptyString("PostFactory Title", frontmatter.title),
+    topic: nonEmptyString("PostFactory Topic", frontmatter.topic),
     contents: markdown,
   });
 }

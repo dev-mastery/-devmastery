@@ -1,8 +1,10 @@
 import { makeLabelDataStore } from "./label-data";
-import localeConfig from "../../../locales.config";
-import text from "../../../data/labels/index.json";
+import common from "../../../data/labels/common.json";
+import navigation from "../../../data/labels/navigation.json";
+import glossary from "../../../data/labels/glossary.json";
+
+export type { Namespace } from "./label-data";
 
 export const labelData = makeLabelDataStore({
-  text,
-  supportedLocales: localeConfig.locales as Locale[],
+  labels: { common, navigation, glossary },
 });

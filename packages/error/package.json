@@ -4,6 +4,7 @@
   "description": "Error Handling",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
+  "type": "module",
   "files": [
     "dist"
   ],

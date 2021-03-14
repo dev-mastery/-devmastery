@@ -1,5 +1,3 @@
-import { OperationalError } from "@devmastery/error";
-
 interface PostData {
   getSlugs: () => Promise<Set<string>>;
 }

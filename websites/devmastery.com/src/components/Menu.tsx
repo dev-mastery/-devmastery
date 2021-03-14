@@ -18,29 +18,29 @@ const NavItem = styled.a`
   cursor: pointer;
 `;
 
-export default function Menu({ text }: { text: object }) {
-  let t = text ?? {};
-
+export default function Menu({
+  items,
+  t,
+}: {
+  items: MenuItem[];
+  t: { [key: string]: string };
+}) {
   return (
     <Nav>
-      <Link href="/articles" passHref>
-        <NavItem>{t["Articles"]}</NavItem>
-      </Link>
-      <Link href="/videos" passHref>
-        <NavItem>{t["Videos"]}</NavItem>
-      </Link>
-      <Link href="/podcasts" passHref>
-        <NavItem>{t["Podcasts"]}</NavItem>
-      </Link>
-      <Link href="/books" passHref>
-        <NavItem>{t["Books"]}</NavItem>
-      </Link>
-      <Link href="/courses" passHref>
-        <NavItem>{t["Courses"]}</NavItem>
-      </Link>
+      {items.map((item: MenuItem) => (
+        <Link key={item.slug} href={`/${item.slug}`}>
+          <NavItem>{item.label}</NavItem>
+        </Link>
+      ))}
       <NavItem>
         <ThemeMode text={t} />
       </NavItem>
     </Nav>
   );
+}
+
+export interface MenuItem {
+  slug: string;
+  priority: number;
+  label: string;
 }

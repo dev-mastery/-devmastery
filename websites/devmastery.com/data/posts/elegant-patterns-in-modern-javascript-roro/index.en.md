@@ -11,7 +11,7 @@ tags:
   - patterns
   - programming
   - software
-title: Elegant Patterns in Mordern JavaScript – RORO
+title: Elegant patterns in modern JavaScript – RORO
 topic: Writing better code
 ---
 

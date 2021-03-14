@@ -8,16 +8,10 @@ export declare class OperationalError extends Error {
     });
     static isOperationalError(error: Error): error is OperationalError;
     get severity(): ErrorSeverity;
-    get context(): string;
+    get context(): string | null;
     get name(): string;
     get mergeFields(): MergeFields;
-    toPlainObject(): Readonly<{
-        context: string;
-        mergeFields: MergeFields;
-        message: string;
-        name: string;
-        severity: ErrorSeverity;
-    }>;
+    toPlainObject(): Readonly<PlainError>;
 }
 declare type MergeFields = {
     [key: string]: {
@@ -25,4 +19,11 @@ declare type MergeFields = {
     };
 };
 declare type ErrorSeverity = "High" | "Medium" | "Low";
+interface PlainError {
+    severity: ErrorSeverity;
+    context: string;
+    name: string;
+    message: string;
+    mergeFields: MergeFields;
+}
 export {};

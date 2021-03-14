@@ -1,9 +1,9 @@
 export class OperationalError extends Error {
-  #context?: string;
-  #severity: ErrorSeverity;
-  #mergeFields: MergeFields;
+  readonly #context?: string;
+  readonly #severity: ErrorSeverity;
+  readonly #mergeFields: MergeFields;
 
-  constructor({
+  public constructor({
     context,
     mergeFields,
     message,
@@ -28,19 +28,19 @@ export class OperationalError extends Error {
     return this.#severity ?? null;
   }
 
-  get context() {
+  get context(): string | null {
     return this.#context ?? null;
   }
 
-  get name() {
+  get name(): string {
     return this.constructor.name;
   }
 
-  get mergeFields() {
+  get mergeFields(): MergeFields {
     return this.#mergeFields;
   }
 
-  toPlainObject() {
+  toPlainObject(): Readonly<PlainError> {
     return Object.freeze({
       context: this.context,
       mergeFields: this.mergeFields,
@@ -53,3 +53,10 @@ export class OperationalError extends Error {
 
 type MergeFields = { [key: string]: { toString(): string } };
 type ErrorSeverity = "High" | "Medium" | "Low";
+interface PlainError {
+  severity: ErrorSeverity;
+  context: string;
+  name: string;
+  message: string;
+  mergeFields: MergeFields;
+}

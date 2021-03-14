@@ -1,15 +1,15 @@
-export class ValidationResult {
+export class Validation {
   #error: Error | undefined;
   private constructor(error?: Error) {
     this.#error = error;
   }
 
-  public static valid(): ValidationResult {
-    return new ValidationResult();
+  public static passed(): Validation {
+    return new Validation();
   }
 
-  public static notValid(error: Error): ValidationResult {
-    return new ValidationResult(error);
+  public static failed(error: Error): Validation {
+    return new Validation(error);
   }
 
   public throwIfNotValid(): void {
@@ -27,6 +27,6 @@ export class ValidationResult {
   }
 
   public isNotValid(): boolean {
-    return !this.isValid;
+    return !this.isValid();
   }
 }

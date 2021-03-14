@@ -4,24 +4,24 @@ import {
   validateNonEmptyString,
 } from "./non-empty-string";
 
-export type Slug = {
+export type SlugFactory = {
   toString(): string;
-  equals(other: Slug): boolean;
+  equals(other: SlugFactory): boolean;
 };
-const label = "Slug";
+const label = "SlugFactory";
 
 export const slugFormat = /^\w+(?:-\w+)*$/;
 
-export function slugOf(slug: string): Slug {
+export function slugOf(slug: string): SlugFactory {
   validateSlug(slug);
   return Object.freeze({
     toString: () => slug,
-    equals: (other: Slug) => other.toString() === slug,
+    equals: (other: SlugFactory) => other.toString() === slug,
   });
 }
 
 export function slugFrom(text: string) {
-  let slug = isValidSlug(text)
+  const slug = isValidSlug(text)
     ? text
     : text
         ?.trim()

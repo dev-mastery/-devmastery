@@ -1,15 +1,13 @@
-export type { ContentId } from "./content-id";
-export type { Image } from "./image";
-export type { Language } from "./language";
-export type { NonEmptyString } from "./non-empty-string";
-export type { Slug } from "./slug";
-export { contentIdOf, contentIdFrom } from "./content-id";
-export { imageFrom } from "./image";
-export { languageFrom } from "./language";
-export {
-  isValidNonEmptyString,
-  nonEmptyString,
-  validateNonEmptyString,
-} from "./non-empty-string";
-export { slugOf, slugFrom } from "./slug";
-export { validLocales } from "../../lib/valid-locales";
+export { Caption } from "./Caption";
+export { ContentId } from "./ContentId";
+export { FullText } from "./FullText";
+export { Image } from "./Image";
+export { Language } from "./Language";
+export { Name } from "./Name";
+export { NonEmptyString } from "./NonEmptyString";
+export { Slug } from "./Slug";
+export { URI } from "./URI";
+export { Validation } from "./Validation";
+export type { ImageInfo } from "./Image";
+export type { LanguageInfo } from "./Language";
+export type { NonEmptyStringValue } from "./NonEmptyString";

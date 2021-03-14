@@ -1,10 +1,10 @@
 import { slugFrom } from "../../common/entities";
-import { Post } from "../entities";
+import { PostFactory } from "../entities";
 
 export type PreviewFn = typeof preview;
 export type PostPreview = ReturnType<PreviewFn>;
 
-export function preview(post: Post) {
+export function preview(post: PostFactory) {
   return Object.freeze({
     author: post.author.toString(),
     authorSlug: slugFrom(post.author.toString()).toString(),

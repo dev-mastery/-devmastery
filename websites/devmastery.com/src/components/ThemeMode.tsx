@@ -2,7 +2,11 @@ import { useTheme } from "../theme/ThemeProvider";
 import { RiSunFill as DarkIcon } from "react-icons/ri";
 import { RiMoonFill as LightIcon } from "react-icons/ri";
 
-export default function ThemeMode({ text }: { text: object }) {
+export default function ThemeMode({
+  text,
+}: {
+  text: { [key: string]: string };
+}) {
   let { theme, setMode } = useTheme();
   let t = text ?? {};
   function changeMode(e: React.MouseEvent | React.KeyboardEvent) {

@@ -3,22 +3,25 @@ import {
   validateNonEmptyString,
 } from "../../common/entities";
 
-export interface Summary {
+export interface SummaryFactory {
   toString(): string;
-  equals(other: Summary): boolean;
+  equals(other: SummaryFactory): boolean;
 }
 
 const max = 280;
-export function summaryFrom(text: string, maxLength: number = max): Summary {
-  validateNonEmptyString("Post Summary", text);
+export function summaryFrom(
+  text: string,
+  maxLength: number = max
+): SummaryFactory {
+  validateNonEmptyString("PostFactory SummaryFactory", text);
   let trimmed = text.trim();
   if (trimmed.length > maxLength) {
-    let words = trimmed.substring(0, maxLength).split(" ");
+    const words = trimmed.substring(0, maxLength).split(" ");
     trimmed = words.slice(0, words.length - 2).join(" ") + "...";
   }
   return {
     toString: () => trimmed,
-    equals: (other: Summary) => other.toString() === trimmed,
+    equals: (other: SummaryFactory) => other.toString() === trimmed,
   };
 }
 
@@ -27,7 +30,7 @@ export function isValidSummary(text: string, maxLength: number = max): boolean {
 }
 
 export function validateSummary(text: string, maxLength: number = max) {
-  validateNonEmptyString("Post Summary", text);
+  validateNonEmptyString("PostFactory SummaryFactory", text);
   if (text.length > maxLength) {
     throw new RangeError(
       `Post Summary must be less than ${maxLength} characters.`

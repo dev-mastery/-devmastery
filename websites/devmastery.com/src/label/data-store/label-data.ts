@@ -1,64 +1,44 @@
 import { OperationalError } from "@devmastery/error";
 
-export function makeLabelDataStore({
-  text,
-  supportedLocales,
-}: {
-  text: Text;
-  supportedLocales: Locale[];
-}) {
-  return Object.freeze({ byNamespaceLocale });
+export function makeLabelDataStore({ labels }: { labels: Labels }) {
+  return Object.freeze({ get });
 
-  async function byNamespaceLocale({
-    namespace,
-    locale,
-  }: {
-    namespace: string;
-    locale: Locale;
-  }) {
-    validateLocale(locale);
-    let ns = getNamespace(namespace);
+  async function get({ key, namespace }: { namespace: string; key: string }) {
+    const ns = await getNamespaceObject(namespace);
 
-    let localized = Object.fromEntries(
-      Object.entries(ns).map(([key, value]) => [key, value[locale]])
-    );
-    return localized;
+    const label = ns[key];
+
+    return label ?? null;
   }
 
-  function getNamespace(namespace: string) {
-    let ns = text[namespace];
-    if (ns == null) {
-      throw new MissingNamespaceError(namespace);
-    }
+  async function getNamespaceObject(namespace: string) {
+    const ns = labels[namespace];
+    if (ns == null) throw new MissingNamespaceError(namespace);
     return ns;
-  }
-
-  function validateLocale(locale: Locale) {
-    if (!supportedLocales.includes(locale)) {
-      throw new UnsupportedLocaleError(locale);
-    }
   }
 }
 
-type Text = {
+type Labels = {
   [key: string]: { [key: string]: { [key in Locale]?: string } };
 };
 
-class UnsupportedLocaleError extends OperationalError {
-  constructor(locale: Locale) {
-    super({
-      message: `Locale "${locale}" is not supported.`,
-      mergeFields: { locale },
-      context: "Getting label data.",
-    });
-  }
-}
+export type Namespace = "glossary" | "navigation" | "common";
 
 class MissingNamespaceError extends OperationalError {
   constructor(namespace: string) {
     super({
       message: `Namespace "${namespace}" is missing.`,
       mergeFields: { namespace },
+      context: "Getting label data.",
+    });
+  }
+}
+
+class MissingLabelError extends OperationalError {
+  constructor(namespace: string, key: string) {
+    super({
+      message: `Namespace "${namespace}" has no key named "${key}".`,
+      mergeFields: { namespace, key },
       context: "Getting label data.",
     });
   }

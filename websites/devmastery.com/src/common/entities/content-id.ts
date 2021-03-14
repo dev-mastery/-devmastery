@@ -2,7 +2,7 @@ import {
   isValidNonEmptyString,
   validateNonEmptyString,
 } from "./non-empty-string";
-import { Slug } from "./slug";
+import { SlugFactory } from "./slug-factory";
 
 export interface ContentId {
   toString(): string;
@@ -10,7 +10,7 @@ export interface ContentId {
 }
 
 interface ContentIdProps {
-  slug: Slug;
+  slug: SlugFactory;
   locale: Locale;
 }
 
@@ -23,7 +23,7 @@ export function contentIdFrom({ slug, locale }: ContentIdProps): ContentId {
 }
 
 export function contentIdOf(value: string) {
-  let id = value.trim();
+  const id = value.trim();
   validateContentId(id);
   return Object.freeze({
     toString: () => id,
