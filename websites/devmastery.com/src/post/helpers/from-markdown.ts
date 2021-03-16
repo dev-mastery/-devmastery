@@ -1,54 +1,30 @@
 import {
-  contentIdFrom,
-  imageFrom,
-  languageFrom,
-  nonEmptyString,
-  slugOf,
+  ContentId,
+  FullText,
+  Slug,
+  Image,
+  Caption,
+  URI,
 } from "../../common/entities";
-import { postOf, durationFrom, minutesToRead, summaryFrom } from "../entities";
-import { markdownFrom } from "../../common/helpers";
+import { Markdown } from "../../markdown/entities/Markdown";
+import {
+  Author,
+  Category,
+  Duration,
+  Post,
+  Summary,
+  Tag,
+  Title,
+  Topic,
+} from "../entities";
 
-export function postFromMarkdown(props: {
+interface FromMarkdownProps {
   dateCreated: number;
   dateModified: number;
-  markdown: string;
+  rawMarkdown: string;
   locale: Locale;
   translations?: Locale[];
   slug: string;
-}) {
-  const markdown = markdownFrom<PostFrontmatter>(props.markdown);
-  const { frontmatter } = markdown;
-  const bodyText = markdown.toText();
-  const slug = slugOf(props.slug);
-  const imageUri = frontmatter.image
-    ? nonEmptyString("PostFactory ImageFactory", frontmatter.image)
-    : null;
-  const imageCaption = frontmatter.imageCaption
-    ? nonEmptyString(
-        "PostFactory ImageFactory Caption",
-        frontmatter.imageCaption
-      )
-    : undefined;
-  const image = imageUri ? imageFrom(imageUri, imageCaption) : null;
-  return postOf({
-    author: nonEmptyString("PostFactory Author", frontmatter.author),
-    category: nonEmptyString("PostFactory Category", frontmatter.category),
-    dateCreated: new Date(props.dateCreated),
-    dateModified: new Date(props.dateModified),
-    datePublished: new Date(frontmatter.datePublished ?? props.dateModified),
-    duration: frontmatter.duration
-      ? durationFrom(frontmatter.duration)
-      : minutesToRead(bodyText),
-    id: contentIdFrom({ slug, locale: props.locale }),
-    image,
-    language: languageFrom(props.locale),
-    slug,
-    summary: summaryFrom(frontmatter.summary ?? bodyText),
-    tags: frontmatter.tags ?? [],
-    title: nonEmptyString("PostFactory Title", frontmatter.title),
-    topic: nonEmptyString("PostFactory Topic", frontmatter.topic),
-    contents: markdown,
-  });
 }
 
 interface PostFrontmatter {
@@ -62,4 +38,71 @@ interface PostFrontmatter {
   title: string;
   topic: string;
   tags?: string[];
+}
+
+export function fromMarkdown({
+  dateCreated,
+  dateModified,
+  rawMarkdown,
+  locale,
+  translations,
+  slug,
+}: FromMarkdownProps): Post {
+  const markdown = Markdown.from<PostFrontmatter>(FullText.of(rawMarkdown));
+  const frontmatter = markdown.frontmatter;
+
+  return Post.of({
+    author: Author.from(frontmatter.author),
+    contents: markdown,
+    category: Category.of(frontmatter.category),
+    dateCreated: new Date(dateCreated),
+    dateModified: new Date(dateModified),
+    datePublished: new Date(frontmatter.datePublished ?? dateModified),
+    duration: extractDuration({ frontmatter, markdown }),
+    id: ContentId.from({ slug: Slug.of(slug), locale }),
+    image: extractImage(frontmatter),
+    locale,
+    slug: Slug.of(slug),
+    summary: extractSummary({ frontmatter, markdown }),
+    tags: frontmatter.tags?.map(Tag.of),
+    title: Title.of(frontmatter.title),
+    topic: Topic.of(frontmatter.topic),
+    translations,
+  });
+}
+
+function extractSummary({
+  frontmatter,
+  markdown,
+}: {
+  frontmatter: PostFrontmatter;
+  markdown: Markdown<PostFrontmatter>;
+}) {
+  return frontmatter.summary
+    ? Summary.of(frontmatter.summary)
+    : Summary.from(markdown.toPlainText());
+}
+
+function extractDuration({
+  frontmatter,
+  markdown,
+}: {
+  frontmatter: PostFrontmatter;
+  markdown: Markdown<PostFrontmatter>;
+}): Duration {
+  return frontmatter.duration
+    ? Duration.of(frontmatter.duration)
+    : Duration.calculate(FullText.of(markdown.toPlainText()));
+}
+
+function extractImage(frontmatter: PostFrontmatter) {
+  let image;
+  if (frontmatter.image) {
+    const imageUri = URI.of(frontmatter.image);
+    const caption = frontmatter.imageCaption
+      ? Caption.of(frontmatter.imageCaption)
+      : undefined;
+    image = Image.from({ uri: imageUri, caption });
+  }
+  return image;
 }

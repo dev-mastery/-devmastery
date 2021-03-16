@@ -1,0 +1,216 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Markdown Converts markdown to HTML. 1`] = `
+"<h1>Dillinger</h1>
+<h2><em>The Last Markdown Editor, Ever</em></h2>
+<p>Dillinger is a cloud-enabled, mobile-ready, offline-storage compatible,
+AngularJS-powered HTML5 Markdown editor.</p>
+<ul>
+<li>Type some Markdown on the left</li>
+<li>See HTML in the right</li>
+<li>✨Magic ✨</li>
+</ul>
+<h2>Features</h2>
+<ul>
+<li>Import a HTML file and watch it magically convert to Markdown</li>
+<li>Drag and drop images (requires your Dropbox account be linked)</li>
+<li>Import and save files from GitHub, Dropbox, Google Drive and One Drive</li>
+<li>Drag and drop markdown and HTML files into Dillinger</li>
+<li>Export documents as Markdown, HTML and PDF</li>
+</ul>
+<p>Markdown is a lightweight markup language based on the formatting conventions
+that people naturally use in email.
+As <a href=\\"http://daringfireball.net/\\">John Gruber</a> writes on the <a href=\\"http://daringfireball.net/projects/markdown/\\">Markdown site</a></p>
+<blockquote>
+<p>The overriding design goal for Markdown's
+formatting syntax is to make it as readable
+as possible. The idea is that a
+Markdown-formatted document should be
+publishable as-is, as plain text, without
+looking like it's been marked up with tags
+or formatting instructions.</p>
+</blockquote>
+<p>This text you see here is *actually- written in Markdown! To get a feel
+for Markdown's syntax, type some text into the left window and
+watch the results in the right.</p>
+<h2>Tech</h2>
+<p>Dillinger uses a number of open source projects to work properly:</p>
+<ul>
+<li><a href=\\"http://angularjs.org/\\">AngularJS</a> - HTML enhanced for web apps!</li>
+<li><a href=\\"http://ace.ajax.org/\\">Ace Editor</a> - awesome web-based text editor</li>
+<li><a href=\\"https://github.com/markdown-it/markdown-it\\">markdown-it</a> - Markdown parser done right. Fast and easy to extend.</li>
+<li><a href=\\"http://twitter.github.com/bootstrap/\\">Twitter Bootstrap</a> - great UI boilerplate for modern web apps</li>
+<li><a href=\\"http://nodejs.org/\\">node.js</a> - evented I/O for the backend</li>
+<li><a href=\\"http://expressjs.com/\\">Express</a> - fast node.js network app framework <a href=\\"http://twitter.com/tjholowaychuk\\">@tjholowaychuk</a></li>
+<li><a href=\\"http://gulpjs.com/\\">Gulp</a> - the streaming build system</li>
+<li><a href=\\"https://breakdance.github.io/breakdance/\\">Breakdance</a> - HTML</li>
+</ul>
+<p>to Markdown converter</p>
+<ul>
+<li><a href=\\"http://jquery.com/\\">jQuery</a> - duh</li>
+</ul>
+<p>And of course Dillinger itself is open source with a <a href=\\"https://github.com/joemccann/dillinger\\">public repository</a> on GitHub.</p>
+<h2>Installation</h2>
+<p>Dillinger requires <a href=\\"https://nodejs.org/\\">Node.js</a> v10+ to run.</p>
+<p>Install the dependencies and devDependencies and start the server.</p>
+<pre><code class=\\"hljs language-sh\\">  <span class=\\"hljs-built_in\\">cd</span> dillinger
+  npm i
+  node app
+</code></pre>
+<p>For production environments...</p>
+<pre><code class=\\"hljs language-sh\\">  npm install --production
+  NODE_ENV=production node app
+</code></pre>
+<h2>Plugins</h2>
+<p>Dillinger is currently extended with the following plugins.
+Instructions on how to use them in your own application are linked below.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Plugin</th><th>README</th></tr></thead><tbody><tr><td>Dropbox</td><td><a href=\\"https://github.com/joemccann/dillinger/tree/master/plugins/dropbox/README.md\\">plugins/dropbox/README.md</a></td></tr><tr><td>GitHub</td><td><a href=\\"https://github.com/joemccann/dillinger/tree/master/plugins/github/README.md\\">plugins/github/README.md</a></td></tr><tr><td>Google Drive</td><td><a href=\\"https://github.com/joemccann/dillinger/tree/master/plugins/googledrive/README.md\\">plugins/googledrive/README.md</a></td></tr><tr><td>OneDrive</td><td><a href=\\"https://github.com/joemccann/dillinger/tree/master/plugins/onedrive/README.md\\">plugins/onedrive/README.md</a></td></tr><tr><td>Medium</td><td><a href=\\"https://github.com/joemccann/dillinger/tree/master/plugins/medium/README.md\\">plugins/medium/README.md</a></td></tr><tr><td>Google Analytics</td><td><a href=\\"https://github.com/RahulHP/dillinger/blob/master/plugins/googleanalytics/README.md\\">plugins/googleanalytics/README.md</a></td></tr></tbody></table>
+<h2>Development</h2>
+<p>Want to contribute? Great!</p>
+<p>Dillinger uses Gulp + Webpack for fast developing.
+Make a change in your file and instantaneously see your updates!</p>"
+`;
+
+exports[`Markdown Converts markdown to plain text. 1`] = `
+"Dillinger
+
+The Last Markdown Editor, Ever
+
+Dillinger is a cloud-enabled, mobile-ready, offline-storage compatible,
+AngularJS-powered HTML5 Markdown editor.
+
+Type some Markdown on the left
+
+See HTML in the right
+
+✨Magic ✨
+
+Features
+
+Import a HTML file and watch it magically convert to Markdown
+
+Drag and drop images (requires your Dropbox account be linked)
+
+Import and save files from GitHub, Dropbox, Google Drive and One Drive
+
+Drag and drop markdown and HTML files into Dillinger
+
+Export documents as Markdown, HTML and PDF
+
+Markdown is a lightweight markup language based on the formatting conventions
+that people naturally use in email.
+As John Gruber writes on the Markdown site
+
+The overriding design goal for Markdown's
+formatting syntax is to make it as readable
+as possible. The idea is that a
+Markdown-formatted document should be
+publishable as-is, as plain text, without
+looking like it's been marked up with tags
+or formatting instructions.
+
+This text you see here is *actually- written in Markdown! To get a feel
+for Markdown's syntax, type some text into the left window and
+watch the results in the right.
+
+Tech
+
+Dillinger uses a number of open source projects to work properly:
+
+AngularJS - HTML enhanced for web apps!
+
+Ace Editor - awesome web-based text editor
+
+markdown-it - Markdown parser done right. Fast and easy to extend.
+
+Twitter Bootstrap - great UI boilerplate for modern web apps
+
+node.js - evented I/O for the backend
+
+Express - fast node.js network app framework @tjholowaychuk
+
+Gulp - the streaming build system
+
+Breakdance - HTML
+to Markdown converter
+
+jQuery - duh
+
+And of course Dillinger itself is open source with a public repository on GitHub.
+
+Installation
+
+Dillinger requires Node.js v10+ to run.
+
+Install the dependencies and devDependencies and start the server.
+
+
+
+For production environments...
+
+
+
+Plugins
+
+Dillinger is currently extended with the following plugins.
+Instructions on how to use them in your own application are linked below.
+
+| Plugin | README |
+| ------ | ------ |
+| Dropbox | plugins/dropbox/README.md |
+| GitHub | plugins/github/README.md |
+| Google Drive | plugins/googledrive/README.md |
+| OneDrive | plugins/onedrive/README.md |
+| Medium | plugins/medium/README.md |
+| Google Analytics | plugins/googleanalytics/README.md |
+
+Development
+
+Want to contribute? Great!
+
+Dillinger uses Gulp + Webpack for fast developing.
+Make a change in your file and instantaneously see your updates!"
+`;
+
+exports[`Markdown Handles Images. 1`] = `
+"<h1>Image in Markdown</h1>
+<p><img src=\\"/_next/image?url=https%3A%2F%2Fsome.url%2FbigImage.jpg&#x26;w=3140&#x26;q=75\\" alt=\\"an image\\" decode=\\"async\\" sizes=\\"(max-width: 2048px) 2048px, (max-width: 1920px) 1920px, (max-width: 1200px) 1200px, (max-width: 1080px) 1080px, (max-width: 828px) 828px, (max-width: 750px) 750px, (max-width: 640px) 640px, 3140px\\" srcset=\\"/_next/image?url=https%3A%2F%2Fsome.url%2FbigImage.jpg&#x26;w=2048&#x26;q=75 2048px, /_next/image?url=https%3A%2F%2Fsome.url%2FbigImage.jpg&#x26;w=1920&#x26;q=75 1920px, /_next/image?url=https%3A%2F%2Fsome.url%2FbigImage.jpg&#x26;w=1200&#x26;q=75 1200px, /_next/image?url=https%3A%2F%2Fsome.url%2FbigImage.jpg&#x26;w=1080&#x26;q=75 1080px, /_next/image?url=https%3A%2F%2Fsome.url%2FbigImage.jpg&#x26;w=828&#x26;q=75 828px, /_next/image?url=https%3A%2F%2Fsome.url%2FbigImage.jpg&#x26;w=750&#x26;q=75 750px, /_next/image?url=https%3A%2F%2Fsome.url%2FbigImage.jpg&#x26;w=640&#x26;q=75 640px,\\" width=\\"3140\\" height=\\"2160\\"></p>"
+`;
+
+exports[`Markdown Handles YouTube videos. 1`] = `
+"<h1>Youtube video in Markdown</h1>
+<p><iframe width=\\"3140\\" height=\\"2160\\" frameborder=\\"0\\" allow=\\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\\" allowfullscreen sandbox seamless src=\\"https://www.youtube-nocookie.com/embed/xCZQIKyi1Io\\" title=\\"a video\\"></iframe></p>"
+`;

@@ -12,7 +12,7 @@ import html from "rehype-stringify";
 const merge = require("deepmerge");
 const gh = require("hast-util-sanitize/lib/github");
 
-const schema = merge(gh, {attributes: {"*": ["className"]}});
+const schema = merge(gh, { attributes: { "*": ["className"] } });
 
 export function mdToHtml(markdown: string) {
   return unified()
@@ -49,7 +49,7 @@ interface HastImageNode extends HastNode {
 
 function handleMedia(url: URL, node: HastNode) {
   if (node.tagName === "img") {
-    let u = fixUrl(url);
+    const u = fixUrl(url);
     if (isYouTube({ url: u.href })) {
       return handleYouTubeVideo(u, node);
     }
@@ -58,7 +58,7 @@ function handleMedia(url: URL, node: HastNode) {
 }
 
 function handleYouTubeVideo(url: URL, node: HastNode) {
-  let src = `https://www.youtube-nocookie.com/embed/${extractYouTubeId(url)}`;
+  const src = `https://www.youtube-nocookie.com/embed/${extractYouTubeId(url)}`;
   node.tagName = "iframe";
   node.properties = {
     width: determineWidth(url).toString(),
@@ -83,11 +83,11 @@ function extractYouTubeId(url: URL) {
 }
 
 function handleImg(url: URL, node: HastNode) {
-  let sizes = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
-  let img = node as HastImageNode;
+  const sizes = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
+  const img = node as HastImageNode;
   img.properties.decode = "async";
-  let w = determineWidth(url, sizes);
-  let q = determineQuality(url);
+  const w = determineWidth(url, sizes);
+  const q = determineQuality(url);
   img.properties.sizes = sizes.reduce(
     (value, size) =>
       size <= w ? `(max-width: ${size}px) ${size}px, ${value} `.trim() : value,
@@ -140,7 +140,7 @@ function fixUrl(url: URL) {
 // lovingly borrowed from:
 // https://github.com/MichaelDeBoey/gatsby-remark-embedder/tree/master/src/transformers
 function isYouTube({ url }) {
-  let { host, pathname, searchParams } = new URL(url);
+  const { host, pathname, searchParams } = new URL(url);
 
   return (
     host === "youtu.be" ||
