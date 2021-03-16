@@ -6,7 +6,7 @@ const DEFAULT_WIDTH = 640;
 const DEFAULT_HEIGHT = 480;
 
 interface ImageProps {
-  src: URI;
+  href: URI;
   width: number;
   height: number;
   quality: number;
@@ -14,21 +14,23 @@ interface ImageProps {
 }
 
 export class Image {
+  readonly #href: string;
   readonly #src: string;
   readonly #quality: number;
   readonly #width: number;
   readonly #height: number;
   readonly #alt: string | undefined;
 
-  private constructor({ src, width, height, quality, alt }: ImageProps) {
-    this.#src = src.toString();
+  private constructor({ href, width, height, quality, alt }: ImageProps) {
+    this.#href = href.toString();
+    this.#src = href.toString().split("?")[0];
     this.#quality = quality;
     this.#width = width;
     this.#height = height;
     this.#alt = alt?.toString();
   }
 
-  public static from({ uri, caption }: { uri: URI; caption: Caption }): Image {
+  public static from({ uri, caption }: { uri: URI; caption?: Caption }): Image {
     const uriString = uri.toString();
     const url = this.toURL(uriString);
 
@@ -37,8 +39,7 @@ export class Image {
     const quality = Image.determineQuality(queryString);
     const width = Image.determineWidth(queryString);
 
-    const src = URI.of(uriString.split("?")[0]);
-    return new Image({ src, height, width, quality, alt: caption });
+    return new Image({ href: uri, height, width, quality, alt: caption });
   }
 
   private static toURL(uriString: string) {
@@ -68,6 +69,7 @@ export class Image {
 
   public toJSON(): ImageInfo {
     return {
+      href: this.href,
       src: this.src,
       height: this.height,
       width: this.width,
@@ -76,28 +78,33 @@ export class Image {
     };
   }
 
-  public get src(): string {
-    return this.#src;
+  public get alt(): string | undefined {
+    return this.#alt;
   }
 
-  public get quality(): number {
-    return this.#quality;
-  }
-
-  public get width(): number {
-    return this.#width;
+  public get href(): string {
+    return this.#href;
   }
 
   public get height(): number {
     return this.#height;
   }
 
-  public get alt(): string | undefined {
-    return this.#alt;
+  public get quality(): number {
+    return this.#quality;
+  }
+
+  public get src(): string {
+    return this.#src;
+  }
+
+  public get width(): number {
+    return this.#width;
   }
 }
 
 export interface ImageInfo {
+  href: string;
   src: string;
   height: number;
   width: number;
