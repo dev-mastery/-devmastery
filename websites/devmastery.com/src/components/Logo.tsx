@@ -17,7 +17,7 @@ const Mastery = styled.path`
     theme.mode === "dark" ? theme.colors.brand : theme.colors.white};
 `;
 
-export default function Logo({ title }: { title: string }) {
+export default function Logo({ title }: { title: string }): JSX.Element {
   return (
     <Link href="/">
       <LogoSvg

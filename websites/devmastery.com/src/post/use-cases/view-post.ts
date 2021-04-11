@@ -1,29 +1,35 @@
-import type { PostFactory } from "../entities";
-import {
-  ContentId,
-  contentIdFrom,
-  slugOf,
-  slugFrom,
-} from "../../common/entities";
+import type { Post, PostInfo } from "../entities";
+import { ContentId, Slug } from "../../common/entities";
 
 interface PostData {
-  get(id: ContentId): Promise<PostFactory>;
+  get(id: ContentId): Promise<Post | null>;
+  findByLocale(locale: Locale): Promise<Post[]>;
 }
 
+type PostView = Omit<PostInfo, "author" | "contents" | "duration"> & {
+  author: string;
+  authorSlug: string;
+  bodyAsHtml: string;
+  durationInMinutes: number;
+};
 export function makeViewPost({ postData }: { postData: PostData }) {
-  return async function viewPost(props: { slug: string; locale: Locale }) {
-    const id = contentIdFrom({
-      slug: slugOf(props.slug),
+  return async function viewPost(props: {
+    slug: string;
+    locale: Locale;
+  }): Promise<PostView | null> {
+    const id = ContentId.from({
+      slug: Slug.of(props.slug),
       locale: props.locale,
     });
     const post = await postData.get(id);
     if (!post) return null;
 
-    const { contents, duration, ...meta } = post.toPlainObject();
+    const { author, contents, duration, ...meta } = post.toJSON();
     return Object.freeze({
       ...meta,
-      authorSlug: slugFrom(meta.author).toString(),
-      bodyAsHtml: post.contents.toHtml(),
+      author: author.name,
+      authorSlug: author.slug,
+      bodyAsHtml: contents.html,
       durationInMinutes: duration.minutes,
     });
   };

@@ -1,5 +1,6 @@
 import { OperationalError } from "@devmastery/error";
 import { ContentId } from "./ContentId";
+import { NonEmptyString } from "./NonEmptyString";
 import { Slug } from "./Slug";
 
 describe("ContentId", () => {
@@ -33,7 +34,9 @@ describe("ContentId", () => {
     const notValid = [missingLocale, missingSeparator, missingSlug];
     expect.assertions(notValid.length);
     notValid.forEach((id) =>
-      expect(() => ContentId.of(id)).toThrow(OperationalError)
+      expect(() => ContentId.of(NonEmptyString.of("ContentId", id))).toThrow(
+        OperationalError
+      )
     );
   });
 
@@ -41,6 +44,8 @@ describe("ContentId", () => {
     const slug = Slug.of("slug");
     const locale = "en";
     const id = ContentId.from({ slug, locale });
-    expect(ContentId.of(id.toString()).equals(id)).toBe(true);
+    expect(
+      ContentId.of(NonEmptyString.of("ContentId", id.toString())).equals(id)
+    ).toBe(true);
   });
 });

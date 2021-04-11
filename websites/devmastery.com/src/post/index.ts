@@ -3,7 +3,7 @@ import { makeBrowseLatest } from "./use-cases/browse-latest";
 import { makeSlugList } from "./use-cases/list-slugs";
 import { makeViewPost } from "./use-cases/view-post";
 import { postData } from "./data-store";
-export type { PostPreview } from "./helpers/preview";
+export type { PostPreview } from "./mappers/to-preview";
 export const browseCategory = makeBrowseCategory({ postData });
 export const browseLatest = makeBrowseLatest({ postData });
 export const viewPost = makeViewPost({ postData });

@@ -1,16 +1,15 @@
 import styled from "@emotion/styled";
-import Image from "next/image";
 import Logo from "./Logo";
 import Menu from "./Menu";
-import type { MenuItem } from "./Menu";
-import { PropsWithChildren } from "react";
+import { interpolate } from "../label/";
+import { PropsWithChildren, useMemo } from "react";
 
 const Container = styled.div`
   display: grid;
   width: 100vw;
   min-height: 100vh;
   grid-template-rows: auto minmax(auto, 90px);
-  transition: all 1s ease-out;
+  /* transition: all 1s ease-out; */
 `;
 
 const Header = styled.div`
@@ -64,23 +63,30 @@ const Footer = styled.small`
 export default function AppLayout({
   children,
   t,
-  menuItems,
 }: PropsWithChildren<{
-  t?: { [key: string]: string };
-  menuItems: MenuItem[];
-}>) {
+  t: { [key: string]: string };
+}>): JSX.Element {
+  const { copyright, logo: logoTitle } = t;
+  const copyrightNotice = useMemo(
+    () =>
+      interpolate({
+        text: copyright,
+        mergeFields: { currentYear: new Date().getFullYear() },
+      }),
+    [copyright]
+  );
   return (
     <Container>
       <Header>
         <TopBar>
           <LogoWrapper>
-            <Logo title={t["Dev Mastery logo."]} />
+            <Logo title={logoTitle} />
           </LogoWrapper>
-          <Menu items={menuItems} t={t} />
+          <Menu t={t ?? {}} />
         </TopBar>
       </Header>
       <Body>{children}</Body>
-      <Footer>{t["Copyright Dev Mastery. All rights reserved."]}</Footer>
+      <Footer>{copyrightNotice}</Footer>
     </Container>
   );
 }

@@ -47,7 +47,11 @@ export default function Hero({
   imageSrc,
   imageCaption,
   maxWidth = "100vw",
-}) {
+}: React.PropsWithChildren<{
+  imageSrc: string;
+  imageCaption: string;
+  maxWidth: string;
+}>): JSX.Element {
   return (
     <HeroLayout>
       <HeroContent maxWidth={maxWidth}>

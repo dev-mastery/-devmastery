@@ -1,4 +1,4 @@
-import faker from 'faker';
+import faker from "faker";
 
 import {
   EmptyStringError,
@@ -8,7 +8,7 @@ import {
   NonEmptyString,
   NullValueError,
   UnnamedStringError,
-} from './NonEmptyString';
+} from "./NonEmptyString";
 
 describe("NonEmptyString", () => {
   it("prevents empty strings", () => {
@@ -28,11 +28,12 @@ describe("NonEmptyString", () => {
     expect(TestNonEmpty.isValid("")).toBe(false);
     expect(TestNonEmpty.isValid("Not empty")).toBe(true);
     expect(TestNonEmpty.isValid((null as never) as string)).toBe(false);
+    expect(TestNonEmpty.isValid((1 as unknown) as string)).toBe(false);
   });
 
   it("exposes string length", () => {
     class TestNonEmpty extends NonEmptyString.named("TestNonEmpty").BaseClass {}
-    const length = Math.round(Math.random() * 10);
+    const length = Math.ceil(Math.random() * 10);
     const string = faker.lorem.word(length);
     const nonEmpty = TestNonEmpty.of(string);
     expect(nonEmpty.length).toBe(length);
@@ -47,7 +48,7 @@ describe("NonEmptyString", () => {
     expect(b.equals(a)).toBe(false);
   });
 
-  it("acts like a String", () => {
+  it("acts like a String but isn't a string", () => {
     class TestNonEmpty extends NonEmptyString.named("TestNonEmpty").BaseClass {}
     const aString = faker.lorem.word();
     const nonEmpty = TestNonEmpty.of(aString);
@@ -56,11 +57,15 @@ describe("NonEmptyString", () => {
     expect(nonEmpty.includes(aString)).toBe(aString.includes(aString));
     expect(nonEmpty.valueOf()).toBe(aString);
     expect(nonEmpty.length).toBe(aString.length);
+    expect(JSON.stringify(nonEmpty)).toBe(JSON.stringify(aString));
+    expect(nonEmpty.toString()).toBe(aString);
+    expect(nonEmpty.charAt(0)).toBe(aString.charAt(0));
+    expect(nonEmpty).not.toBe(String(aString));
   });
 
   it("Exposes a static constructor", () => {
     const aString = "aString";
-    const nonEmpty = NonEmptyString.of(aString, "NonEmpty");
+    const nonEmpty = NonEmptyString.of("NonEmpty", aString);
     expect(nonEmpty.toString()).toBe(aString);
   });
 
@@ -96,11 +101,42 @@ describe("NonEmptyString", () => {
   });
 
   it("Must be named", () => {
-    expect(() => NonEmptyString.of("unnamed", "   ")).toThrow(
+    expect(() => NonEmptyString.of("   ", "unnamed")).toThrow(
       UnnamedStringError
     );
-
     expect(() => NonEmptyString.named("")).toThrow(UnnamedStringError);
     expect(() => NonEmptyString.named("  ")).toThrow(UnnamedStringError);
+    expect(() => NonEmptyString.named((null as unknown) as string)).toThrow(
+      UnnamedStringError
+    );
+  });
+
+  it("Exposes validation", () => {
+    const format = /^[A-Z]+$/;
+    const minLength = 2;
+    const maxLength = 3;
+    class MyString extends NonEmptyString.named("MyString")
+      .format(format)
+      .minLength(minLength)
+      .maxLength(maxLength).BaseClass {}
+
+    const valid = ["AA", "BBB", "CD", "EFG"];
+    valid.forEach((s) => {
+      expect(MyString.validate(s).error).toBeUndefined();
+      expect(MyString.validate(s).isValid()).toBe(true);
+      expect(MyString.validate(s).isNotValid()).toBe(false);
+      expect(MyString.isValid(s)).toBe(true);
+    });
+
+    const notValid = ["aa", "A", "DDDD", (null as unknown) as string];
+    notValid.forEach((s) => {
+      expect(MyString.validate(s).error).toBeDefined();
+      expect(MyString.validate(s).isValid()).toBe(false);
+      expect(MyString.validate(s).isNotValid()).toBe(true);
+      expect(MyString.isValid(s)).toBe(false);
+      expect(() => MyString.validate(s).throwIfNotValid()).toThrow();
+    });
+
+    expect.assertions(valid.length * 4 + notValid.length * 5);
   });
 });

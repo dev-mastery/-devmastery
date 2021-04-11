@@ -22,7 +22,7 @@ export function paginate<T>({
   mustBeAWholeNumber("Page Size", maxPerPage);
   mustNotBeNull("List", list);
 
-  let initialResult = {
+  const initialResult: PagedResult<T> = {
     totalPages: 0,
     maxPerPage,
     count: list.length,
@@ -34,7 +34,7 @@ export function paginate<T>({
   }
 
   return list.reduce((pagedResult, item, index) => {
-    let currentPage = Math.floor(index / maxPerPage) + 1;
+    const currentPage = Math.floor(index / maxPerPage) + 1;
     if (!pagedResult.pages[currentPage]) {
       pagedResult.totalPages++;
       pagedResult.pages[currentPage] = [];

@@ -1,10 +1,4 @@
-import { makeLabelDataStore } from "./label-data";
-import common from "../../../data/labels/common.json";
-import navigation from "../../../data/labels/navigation.json";
-import glossary from "../../../data/labels/glossary.json";
+import labels from "../../../data/labels/index.json";
+import { LabelData } from "./LabelData";
 
-export type { Namespace } from "./label-data";
-
-export const labelData = makeLabelDataStore({
-  labels: { common, navigation, glossary },
-});
+export const labelData = new LabelData({ labels });

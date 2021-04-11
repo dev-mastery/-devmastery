@@ -1,32 +1,43 @@
 import { interpolate } from "./interpolate";
 
+interface MergeFields {
+  [key: string]: string | number;
+}
+
 describe("interpolate", () => {
   it("replaces values", () => {
-    let mergeFields = {
+    const mergeFields = {
       name: "Mohamed",
     };
-    let text = "Hello, {{name}}!";
-    let expected = `Hello, ${mergeFields.name}!`;
+    const text = "Hello, {{name}}!";
+    const expected = `Hello, ${mergeFields.name}!`;
     expect(interpolate({ text, mergeFields })).toBe(expected);
   });
   it("ignores extraneous mergeFields", () => {
-    let mergeFields = {
+    const mergeFields = {
       extraneous: "foo",
     };
-    let text = "Hello!";
-    let expected = `Hello!`;
+    const text = "Hello!";
+    const expected = `Hello!`;
     expect(interpolate({ text, mergeFields })).toBe(expected);
   });
   it("errors on missing mergeFields", () => {
-    let mergeFields = null;
-    let text = "Hello!";
-    expect(() => interpolate({ text, mergeFields })).toThrow(TypeError);
+    const mergeFields = null;
+    const text = "Hello!";
+    expect(() =>
+      interpolate({
+        text,
+        mergeFields: (mergeFields as unknown) as MergeFields,
+      })
+    ).toThrow(TypeError);
   });
   it("errors on missing text", () => {
-    let mergeFields = {
+    const mergeFields = {
       extraneous: "foo",
     };
-    let text = null;
-    expect(() => interpolate({ text, mergeFields })).toThrow(TypeError);
+    const text = null;
+    expect(() =>
+      interpolate({ text: (text as unknown) as string, mergeFields })
+    ).toThrow(TypeError);
   });
 });

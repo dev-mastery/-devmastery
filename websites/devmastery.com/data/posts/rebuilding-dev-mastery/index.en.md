@@ -3,7 +3,7 @@ author: Bill Sourour
 category: Architecture & Design
 image: cover.png
 section: Articles
-summary: Here's how I put together a new (open-source) website for Dev Mastery.
+summary: Here's how I put together a new website for Dev Mastery.
 tags:
   - frontend
   - jamstack

@@ -1,14 +1,9 @@
-import type {
-  ContentId,
-  Image,
-  ImageInfo,
-  Language,
-  LanguageInfo,
-  Slug,
-} from "../../common/entities";
+import type { Image, ImageInfo, Slug } from "../../common/entities";
+import { ContentId } from "../../common/entities";
 import type { Author, AuthorInfo } from "./Author";
 import type { Category } from "./Category";
 import type { Duration, DurationInfo } from "./Duration";
+import type { Markdown, MarkdownInfo } from "../../markdown/entities/Markdown";
 import type { Summary } from "./Summary";
 import type { Tag } from "./Tag";
 import type { Title } from "./Title";
@@ -20,26 +15,18 @@ const DATE_OPTIONS: Intl.DateTimeFormatOptions = {
   day: "numeric",
 };
 
-interface PostContentInfo {
-  asPlainText: string;
-  asHtml: string;
-}
-
-interface PostContents {
-  toJSON(): PostContentInfo;
-}
-
 interface PostProps {
   author: Author;
-  contents: PostContents;
   category: Category;
+  contents: Markdown<unknown>;
   dateCreated: Date;
   dateModified: Date;
   datePublished: Date;
   duration: Duration;
   id: ContentId;
-  image: Image;
-  language: Language;
+  image?: Image;
+  locale: Locale;
+  otherLocales?: Locale[];
   slug: Slug;
   summary: Summary;
   tags?: Tag[];
@@ -49,15 +36,16 @@ interface PostProps {
 
 export interface PostInfo {
   author: AuthorInfo;
-  contents: PostContentInfo;
   category: string;
+  contents: MarkdownInfo;
   dateCreated: string;
   dateModified: string;
   datePublished: string;
   duration: DurationInfo;
   id: string;
-  image: ImageInfo;
-  language: LanguageInfo;
+  image?: ImageInfo;
+  locale: Locale;
+  otherLocales?: Locale[];
   slug: string;
   summary: string;
   tags?: string[];
@@ -67,69 +55,71 @@ export interface PostInfo {
 
 export class Post {
   readonly #author;
-  readonly #contents;
   readonly #category;
+  readonly #contents;
   readonly #dateCreated;
   readonly #dateModified;
   readonly #datePublished;
   readonly #duration;
   readonly #id;
   readonly #image;
-  readonly #language;
+  readonly #locale;
+  readonly #otherLocales;
   readonly #slug;
   readonly #summary;
-  readonly #tags: string[] | undefined;
+  readonly #tags;
   readonly #title;
   readonly #topic;
 
   private constructor(props: PostProps) {
     this.#author = props.author;
+    this.#category = props.category;
     this.#contents = props.contents;
-    this.#category = props.category.toString();
     this.#dateCreated = props.dateCreated;
     this.#dateModified = props.dateModified;
     this.#datePublished = props.datePublished;
     this.#duration = props.duration;
-    this.#id = props.id.toString();
+    this.#id =
+      props.id ?? ContentId.from({ slug: props.slug, locale: props.locale });
     this.#image = props.image;
-    this.#language = props.language;
-    this.#slug = props.slug.toString();
-    this.#summary = props.summary.toString();
-    this.#tags = props.tags?.map((tag) => tag.toString());
-    this.#title = props.title.toString();
-    this.#topic = props.topic.toString();
+    this.#locale = props.locale;
+    this.#otherLocales = new Set<Locale>(props.otherLocales);
+    this.#slug = props.slug;
+    this.#summary = props.summary;
+    this.#tags = props.tags;
+    this.#title = props.title;
+    this.#topic = props.topic;
   }
 
   public static of(props: PostProps): Post {
     return new Post(props);
   }
 
+  public addLocale(locale: Locale): void {
+    this.#otherLocales.add(locale);
+  }
+
   public toJSON(): PostInfo {
     return {
       author: this.author.toJSON(),
       contents: this.contents.toJSON(),
-      category: this.category,
-      dateCreated: this.dateCreated.toLocaleString(
-        this.language.locale,
-        DATE_OPTIONS
-      ),
-      dateModified: this.dateModified.toLocaleString(
-        this.language.locale,
-        DATE_OPTIONS
-      ),
+      category: this.category.toString(),
+      dateCreated: this.dateCreated.toLocaleString(this.locale, DATE_OPTIONS),
+      dateModified: this.dateModified.toLocaleString(this.locale, DATE_OPTIONS),
       datePublished: this.datePublished.toLocaleString(
-        this.language.locale,
+        this.locale,
         DATE_OPTIONS
       ),
       duration: this.duration.toJSON(),
-      id: this.id,
-      image: this.image.toJSON(),
-      language: this.language.toJSON(),
-      slug: this.slug,
-      summary: this.summary,
-      tags: this.tags,
-      title: this.title,
-      topic: this.topic,
+      id: this.id.toString(),
+      image: this.image?.toJSON(),
+      locale: this.locale,
+      slug: this.slug.toString(),
+      summary: this.summary.toString(),
+      tags: this.tags.map((t) => t.toString()),
+      title: this.title.toString(),
+      topic: this.topic.toString(),
+      otherLocales: Array.from(this.otherLocales),
     };
   }
 
@@ -137,11 +127,11 @@ export class Post {
     return this.#author;
   }
 
-  public get contents(): PostContents {
+  public get contents(): Markdown<unknown> {
     return this.#contents;
   }
 
-  public get category(): string {
+  public get category(): Category {
     return this.#category;
   }
 
@@ -161,35 +151,39 @@ export class Post {
     return this.#duration;
   }
 
-  public get id(): string {
+  public get id(): ContentId {
     return this.#id;
   }
 
-  public get image(): Image {
+  public get image(): Image | undefined {
     return this.#image;
   }
 
-  public get language(): Language {
-    return this.#language;
+  public get locale(): Locale {
+    return this.#locale;
   }
 
-  public get slug(): string {
+  public get slug(): Slug {
     return this.#slug;
   }
 
-  public get summary(): string {
+  public get summary(): Summary {
     return this.#summary;
   }
 
-  public get tags(): string[] | undefined {
-    return this.#tags;
+  public get tags(): Readonly<Tag[]> {
+    return Object.freeze(this.#tags ?? []);
   }
 
-  public get title(): string {
+  public get title(): Title {
     return this.#title;
   }
 
-  public get topic(): string {
+  public get topic(): Topic {
     return this.#topic;
+  }
+
+  public get otherLocales(): Readonly<Locale[]> {
+    return Array.from(this.#otherLocales);
   }
 }

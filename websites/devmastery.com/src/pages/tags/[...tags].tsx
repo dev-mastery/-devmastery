@@ -1,13 +1,19 @@
 import {
   GetStaticPaths,
-  GetStaticPathsContext,
+  // GetStaticPathsContext,
   GetStaticProps,
   GetStaticPropsContext,
 } from "next";
 import { useRouter } from "next/router";
 
-export default function TagList({ allTags, selectedTags }) {
-  let router = useRouter();
+export default function TagList({
+  allTags,
+  selectedTags,
+}: {
+  allTags: string[];
+  selectedTags: string[];
+}): JSX.Element {
+  const router = useRouter();
   return router.isFallback ? (
     <div>
       <br />
@@ -33,20 +39,19 @@ export default function TagList({ allTags, selectedTags }) {
 }
 
 export const getStaticProps: GetStaticProps = async function ({
-  locale,
-  defaultLocale,
-  params: { tags },
+  // locale,
+  // defaultLocale,
+  params,
 }: GetStaticPropsContext) {
-  let allTags = ["a", "b", "c"];
+  const allTags = ["a", "b", "c"];
   return {
-    props: { selectedTags: tags, allTags },
+    props: { selectedTags: params?.tags, allTags },
     revalidate: 1,
   };
 };
 
-export const getStaticPaths: GetStaticPaths = async function (
-  _context: GetStaticPathsContext
-) {
-  let paths = [{ params: { tags: ["a"] } }];
+export const getStaticPaths: GetStaticPaths = async function (): // _context: GetStaticPathsContext
+Promise<{ paths: { params: { tags: string[] } }[]; fallback: true }> {
+  const paths = [{ params: { tags: ["a"] } }];
   return { paths, fallback: true };
 };

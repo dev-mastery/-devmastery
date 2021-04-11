@@ -1,5 +1,5 @@
 import { Image, URI } from "../../common/entities";
-
+import { toNearestSize } from "./to-nearest-size";
 interface HastNode {
   type: string;
   tagName: string;
@@ -40,8 +40,8 @@ function handleImg({ image, node }: { image: Image; node: HastNode }) {
   const imgNode = node as HastImageNode;
   imgNode.properties.decode = "async";
 
-  const w = image.width;
-  const q = image.quality;
+  const w = toNearestSize(sizes, Number(image.width)); //?
+  const q = image.quality > 0 ? image.quality : 75;
   imgNode.properties.sizes = sizes.reduce(
     (value, size) =>
       size <= w ? `(max-width: ${size}px) ${size}px, ${value} `.trim() : value,
@@ -57,7 +57,7 @@ function handleImg({ image, node }: { image: Image; node: HastNode }) {
     ``
   );
   imgNode.properties.width = w.toString();
-  imgNode.properties.height = image.height.toString();
+  // imgNode.properties.height = image.height.toString();
   return `/_next/image?url=${encodeURIComponent(image.src)}&w=${w}&q=${q}`;
 }
 
@@ -81,7 +81,6 @@ function handleYouTubeVideo({
     allow:
       "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
     allowfullscreen: true,
-    sandbox: true,
     seamless: true,
     src,
     title: node.properties.title ?? node.properties.alt,
@@ -91,7 +90,9 @@ function handleYouTubeVideo({
 
 function extractyouTubeId(url: URL): string | null {
   if (url.host === "youtu.be") {
-    return url.pathname.replace("/", "");
+    const id = url.pathname.replace("/", "");
+    console.log(id);
+    return id;
   }
   if (["www.youtube.com", "youtube.com"].includes(url.host)) {
     return url.searchParams?.get("v");

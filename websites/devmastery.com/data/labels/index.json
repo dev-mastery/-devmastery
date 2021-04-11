@@ -1,0 +1,35 @@
+{
+  "light mode": {
+    "en": "Switch to light mode.",
+    "fr": "Activer le thème lumineux."
+  },
+  "dark mode": {
+    "en": "Switch to dark mode.",
+    "fr": "Activer le thème foncé."
+  },
+  "logo": {
+    "en": "Dev Mastery logo. Click to return to homepage.",
+    "fr": "Le logo de Dev Mastery. Cliquez pour retourner à la page d'accueil."
+  },
+  "copyright": {
+    "en": "© Copyright 2015-{{currentYear}} Dev Mastery. All rights reserved.",
+    "fr": "© 2015-{{currentYear}} Dev Mastery. Ce site et son contenu sont protégés par le droit d'auteur et les droits de propriété intellectuelle."
+  },
+  "github": {
+    "en": "DevMastery.com Github Repo",
+    "fr": "DevMastery.com sur Github"
+  },
+  "youtube": {
+    "en": "Dev Mastery YouTube Channel",
+    "fr": "Dev Mastery sur YouTube"
+  },
+  "minutes": {
+    "en": "Minutes",
+    "fr": "Minutes"
+  },
+  "articles": { "en": "Articles", "fr": "Articles" },
+  "videos": { "en": "Videos", "fr": "Vidéos" },
+  "podcasts": { "en": "Podcasts", "fr": "Podcasts" },
+  "books": { "en": "Books", "fr": "Livres" },
+  "courses": { "en": "Courses", "fr": "Cours" }
+}

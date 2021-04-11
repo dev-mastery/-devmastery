@@ -43,8 +43,8 @@ export class Language {
     }`;
     return new Language({
       locale: locale,
-      name: NonEmptyString.of(name, "Language Name"),
-      nativeName: NonEmptyString.of(nativeName, "Native Language Name"),
+      name: NonEmptyString.of("Language Name", name),
+      nativeName: NonEmptyString.of("Native Language Name", nativeName),
     });
   }
 

@@ -14,6 +14,10 @@ export class Author {
     this.#slug = props.slug.toString();
   }
 
+  public static of(props: { name: Name; slug: Slug }): Author {
+    return new Author(props);
+  }
+
   public static from(authorName: string): Author {
     const name = Name.of(authorName);
     const slug = Slug.from(authorName);

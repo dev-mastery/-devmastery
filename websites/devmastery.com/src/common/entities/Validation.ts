@@ -1,3 +1,5 @@
+export type ValidationResult = Validation;
+
 export class Validation {
   #error: Error | undefined;
   private constructor(error?: Error) {

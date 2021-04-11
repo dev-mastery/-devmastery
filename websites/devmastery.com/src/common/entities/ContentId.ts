@@ -1,11 +1,17 @@
 import { OperationalError } from "@devmastery/error";
 import { Validation } from "./Validation";
-import { NonEmptyString } from "./NonEmptyString";
+import { NonEmptyString, NonEmptyStringValue } from "./NonEmptyString";
 import { Slug } from "./Slug";
 
 const ID_SEPARATOR = ":";
 
-export class ContentId extends NonEmptyString.named("ContentId").BaseClass {
+export class ContentId {
+  #value: NonEmptyStringValue;
+
+  private constructor(value: NonEmptyStringValue) {
+    this.#value = value;
+  }
+
   public static from({
     slug,
     locale,
@@ -13,10 +19,15 @@ export class ContentId extends NonEmptyString.named("ContentId").BaseClass {
     slug: Slug;
     locale: Locale;
   }): ContentId {
-    return ContentId.of(`${slug.toString()}${ID_SEPARATOR}${locale}`);
+    return ContentId.of(
+      NonEmptyString.of(
+        "ContentId",
+        `${slug.toString()}${ID_SEPARATOR}${locale}`
+      )
+    );
   }
 
-  public static of(id: string): ContentId {
+  public static of(id: NonEmptyStringValue): ContentId {
     ContentId.validate(id).throwIfNotValid();
     return new ContentId(id);
   }
@@ -25,30 +36,39 @@ export class ContentId extends NonEmptyString.named("ContentId").BaseClass {
     return ID_SEPARATOR;
   }
 
-  public static isValid(value: string): boolean {
-    const [slug, locale] = value.split(ContentId.separator);
-    return (
-      value.includes(ContentId.separator) &&
-      Slug.isValid(slug) &&
-      super.isValid(locale)
-    );
+  public static isValid(value: unknown): boolean {
+    return this.validate(value).isValid();
   }
 
-  protected static validate(value: string): Validation {
-    const baseValidation = super.validate(value);
-    if (baseValidation.isNotValid()) {
-      return baseValidation;
-    }
-
-    if (!value.includes(ContentId.separator)) {
+  public static validate(value: unknown): Validation {
+    NonEmptyString.validate(value, "ContentId");
+    const asString = value as string;
+    if (!asString.includes(ContentId.separator)) {
       return Validation.failed(new ContentIdSeparatorError());
     }
 
-    const [slug, locale] = value.split(ContentId.separator);
+    const [slug, locale] = asString.split(ContentId.separator);
     if (!Slug.isValid(slug)) {
       return Validation.failed(new ContentIdSlugError());
     }
-    return super.validate(locale);
+
+    if (!locale?.length) {
+      return Validation.failed(new ContentIdLocaleError());
+    }
+
+    return Validation.passed();
+  }
+
+  public valueOf(): string {
+    return this.#value.toString();
+  }
+
+  public toString(): string {
+    return this.valueOf();
+  }
+
+  public equals(other: ContentId): boolean {
+    return this.toString() === other.toString();
   }
 }
 

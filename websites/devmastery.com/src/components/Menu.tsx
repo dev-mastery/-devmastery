@@ -18,20 +18,24 @@ const NavItem = styled.a`
   cursor: pointer;
 `;
 
-export default function Menu({
-  items,
-  t,
-}: {
-  items: MenuItem[];
-  t: { [key: string]: string };
-}) {
+export default function Menu({ t }: { t: { [key: string]: string } }) {
   return (
     <Nav>
-      {items.map((item: MenuItem) => (
-        <Link key={item.slug} href={`/${item.slug}`}>
-          <NavItem>{item.label}</NavItem>
-        </Link>
-      ))}
+      <Link href="/articles">
+        <NavItem>{t["articles"]}</NavItem>
+      </Link>
+      <Link href="/videos">
+        <NavItem>{t["videos"]}</NavItem>
+      </Link>
+      <Link href="/podcasts">
+        <NavItem>{t["podcasts"]}</NavItem>
+      </Link>
+      <Link href="/books">
+        <NavItem>{t["books"]}</NavItem>
+      </Link>
+      <Link href="/courses">
+        <NavItem>{t["courses"]}</NavItem>
+      </Link>
       <NavItem>
         <ThemeMode text={t} />
       </NavItem>

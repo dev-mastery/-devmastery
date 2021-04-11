@@ -6,5 +6,8 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "typescriptHero.imports.stringQuoteStyle": "\"",
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java"
+  },
 
 }

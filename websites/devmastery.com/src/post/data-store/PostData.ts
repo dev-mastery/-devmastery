@@ -1,19 +1,19 @@
-import {
-  ContentId,
-  NonEmptyString,
-  SlugFactory,
-  slugOf,
-} from "../../common/entities";
-import { PostFactory } from "../entities";
+import { ContentId, Slug } from "../../common/entities";
+import type { Category, Post, Topic } from "../entities";
 
+// Note: Resist the temptation to add caching here.
+// NextJS builds each page in a separate process
+// so caching needs to happen out-of-proc (local filesystem or database).
+// Since the source data is already on the local filesystem, caching
+// would do no good.
+
+/**
+ * Encapsulates the posts.
+ *
+ * @export
+ * @class PostData
+ */
 export class PostData {
-  #byId = new Map<string, PostFactory>();
-  #slugs = new Set<SlugFactory>();
-  #categories = new Map<Locale, Set<string>>();
-  #topics = new Map<Locale, Set<string>>();
-  #tags = new Map<Locale, Set<string>>();
-  // #refresh = init.bind(this, { force: true });
-  #initialized = false;
   readonly #fileExists: FileExistsFn;
   readonly #makePath: MakePathFn;
   readonly #postFromMarkdown: PostFromMarkdownFn;
@@ -38,64 +38,60 @@ export class PostData {
     this.#readDir = readDir;
     this.#readFile = readFile;
     this.#supportedLocales = supportedLocales;
-    this.init().then(() => (this.#initialized = true));
   }
 
-  public refresh(): Promise<void> {
-    return this.init({ force: true });
+  public async get(id: ContentId): Promise<Post | null> {
+    const predicate = (p: Post) => p.id.equals(id);
+    return (await this.find(predicate))[0];
   }
 
-  public async get(id: ContentId): Promise<PostFactory | null> {
-    let found = this.#byId.get(id.toString());
-    if (!found) {
-      await this.refresh();
-      found = this.#byId.get(id.toString());
-    }
-    return found ?? null;
+  public async findByLocale(locale: Locale): Promise<Post[]> {
+    const predicate = (p: Post) => p.locale === locale;
+    return this.find(predicate);
   }
 
-  public async find(
-    predicate: (p: PostFactory) => boolean
-  ): Promise<PostFactory[]> {
-    let found = Array.from(this.#byId.values()).filter(predicate);
-    if (!found) {
-      await this.refresh();
-      found = Array.from(this.#byId.values()).filter(predicate);
-    }
-    return found;
+  public async findByCategory(
+    category: Category,
+    locale?: Locale
+  ): Promise<Post[]> {
+    const predicate = (p: Post) =>
+      p.category.equals(category) && p.locale === (locale ?? p.locale);
+
+    return this.find(predicate);
   }
 
-  public async getSlugs(): Promise<Readonly<SlugFactory[]>> {
-    return Object.freeze(Array.from(this.#slugs));
+  public async findByTopic(topic: Topic, locale?: Locale): Promise<Post[]> {
+    const predicate = (p: Post) =>
+      p.topic.equals(topic) && p.locale === (locale ?? p.locale);
+
+    return this.find(predicate);
   }
 
-  private async init(props?: { force?: boolean }): Promise<void> {
-    if (this.#initialized && !props?.force) {
-      return;
-    }
-    const slugList = this.#readDir({ path: this.#postsRoot });
-    for (const slug of slugList) {
-      this.cacheSlug(slug);
-      for (const locale of this.#supportedLocales) {
+  public async find(predicate: (p: Post) => boolean): Promise<Post[]> {
+    return (await this.listAll()).filter(predicate);
+  }
+
+  public async getSlugs(): Promise<Slug[]> {
+    return this.#readDir({ path: this.#postsRoot }).map(Slug.of);
+  }
+
+  public async listAll(): Promise<Readonly<Post[]>> {
+    const slugs = await this.getSlugs();
+    return slugs.reduce((posts: Post[], s: Slug) => {
+      const slug = s.toString();
+      this.#supportedLocales.forEach((locale) => {
         const path = this.getFilePath({ locale, slug });
         if (this.#fileExists({ path })) {
-          const post = this.makePostFromFile({ path, slug, locale });
-          this.cachePost(post);
-          this.cacheCategory({ locale, category: post.category });
-          this.cacheTopic({ locale, topic: post.topic });
-          this.cacheTags({ locale, tagList: post.tags });
+          const post = this.makePostFromFile({
+            path,
+            slug,
+            locale,
+          });
+          posts.push(post);
         }
-      }
-    }
-    return;
-  }
-
-  private cacheSlug(slug: string) {
-    this.#slugs.add(slugOf(slug));
-  }
-
-  private cachePost(post: PostFactory) {
-    this.#byId.set(post.id.toString(), post);
+      });
+      return posts;
+    }, []);
   }
 
   private makePostFromFile({
@@ -113,52 +109,13 @@ export class PostData {
       locale,
       dateCreated: createdAt,
       dateModified: modifiedAt,
-      markdown: contents,
+      rawMarkdown: contents,
     });
   }
 
   private getFilePath({ locale, slug }: { locale: string; slug: string }) {
     const fileName = `index.${locale}.md`;
     return this.#makePath(this.#postsRoot, slug, fileName);
-  }
-
-  private cacheTags({
-    locale,
-    tagList,
-  }: {
-    locale: Locale;
-    tagList?: string[];
-  }) {
-    if (!this.#tags.has(locale)) {
-      this.#tags.set(locale, new Set<string>());
-    }
-    tagList?.forEach((tag) => this.#tags.get(locale)?.add(tag));
-  }
-
-  private cacheTopic({
-    locale,
-    topic,
-  }: {
-    locale: Locale;
-    topic: NonEmptyString;
-  }) {
-    if (!this.#topics.has(locale)) {
-      this.#topics.set(locale, new Set<string>());
-    }
-    this.#topics.get(locale)?.add(topic.toString());
-  }
-
-  private cacheCategory({
-    locale,
-    category,
-  }: {
-    locale: Locale;
-    category: NonEmptyString;
-  }) {
-    if (!this.#categories.has(locale)) {
-      this.#categories.set(locale, new Set<string>());
-    }
-    this.#categories.get(locale)?.add(category.toString());
   }
 }
 
@@ -178,11 +135,11 @@ type FileExistsFn = (props: { path: string }) => boolean;
 type PostFromMarkdownFn = (props: {
   dateCreated: number;
   dateModified: number;
-  markdown: string;
+  rawMarkdown: string;
   locale: Locale;
   translations?: Locale[];
   slug: string;
-}) => PostFactory;
+}) => Post;
 
 interface FileInfo {
   contents: string;

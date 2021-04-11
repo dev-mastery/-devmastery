@@ -47,7 +47,7 @@ so if you’re not familiar with it, here’s a quick video from
 [Beau Carnes](https://www.youtube.com/playlist?list=PLWKjhJtqVAbk2qRZtWSzCIN38JC_NdhW5)
 to get you up to speed._
 
-![Beau Carnes Explains Destructuring](https://youtu.be/-vR3a11Wzt0)
+![Beau Carnes Explains Destructuring](https://youtu.be/-vR3a11Wzt0?w=640&h=360)
 
 Here are some reasons why you’ll love this pattern:
 

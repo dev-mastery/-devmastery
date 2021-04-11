@@ -1,9 +1,9 @@
-import { OperationalError } from '@devmastery/error';
+import { OperationalError } from "@devmastery/error";
+import { Validation, ValidationResult } from "./Validation";
 
-import { Validation } from './Validation';
-
-export interface NonEmptyStringValue extends String {
+export interface NonEmptyStringValue {
   readonly format: RegExp;
+  readonly length: number;
   readonly minLength: number;
   readonly maxLength: number;
   equals(other: NonEmptyStringValue): boolean;
@@ -16,15 +16,19 @@ export class NonEmptyString {
   #format = new RegExp("");
 
   private constructor(name: string) {
-    const trimmed = name.trim();
-    if (!trimmed.length) {
+    const trimmed = name?.trim();
+    if (!trimmed?.length) {
       throw new UnnamedStringError();
     }
     this.#name = trimmed;
   }
 
-  public static of(value: string, name: string): NonEmptyStringValue {
+  public static of(name: string, value: string): NonEmptyStringValue {
     return NonEmptyString.named(name).BaseClass.of(value);
+  }
+
+  public static validate(value: unknown, name: string): Validation {
+    return NonEmptyString.named(name).BaseClass.validate(value);
   }
 
   public static named(name: string): NonEmptyString {
@@ -51,16 +55,21 @@ export class NonEmptyString {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const outer = this;
     return class NonEmptyStringValue extends String {
+      private __fromConstructor: never;
       protected constructor(value: string) {
-        super(value?.trim());
-        NonEmptyStringValue.validate(value).throwIfNotValid();
+        super(value);
       }
 
       public static of(value: string) {
+        NonEmptyStringValue.validate(value).throwIfNotValid();
         return new NonEmptyStringValue(value);
       }
 
-      public static isValid(value: string): boolean {
+      public static from(value: string) {
+        return this.of(value.trim());
+      }
+
+      public static isValid(value: unknown): boolean {
         return NonEmptyStringValue.validate(value).isValid();
       }
 
@@ -76,29 +85,40 @@ export class NonEmptyString {
         return outer.#format;
       }
 
-      protected static validate(value: string): Validation {
-        const trimmed = value?.trim();
-        if (trimmed == null) {
-          return Validation.failed(new NullValueError(outer.#name));
+      public static validate(
+        value: unknown,
+        context?: string
+      ): ValidationResult {
+        if (value == null) {
+          return Validation.failed(new NullValueError(outer.#name, context));
         }
+        if (typeof value !== "string") {
+          return Validation.failed(new NotAStringError(outer.#name, context));
+        }
+
+        const trimmed = value.trim();
         if (!trimmed.length) {
-          return Validation.failed(new EmptyStringError(outer.#name));
+          return Validation.failed(new EmptyStringError(outer.#name, context));
         }
+
         if (trimmed.length < outer.#minLength) {
           return Validation.failed(
-            new MinLengthError(outer.#name, outer.#minLength)
+            new MinLengthError(outer.#name, outer.#minLength, context)
           );
         }
+
         if (trimmed.length > outer.#maxLength) {
           return Validation.failed(
-            new MaxLengthError(outer.#name, outer.#maxLength)
+            new MaxLengthError(outer.#name, outer.#maxLength, context)
           );
         }
+
         if (!outer.#format.test(trimmed)) {
           return Validation.failed(
-            new MalformedError(outer.#name, outer.#format)
+            new MalformedError(outer.#name, outer.#format, context)
           );
         }
+
         return Validation.passed();
       }
 
@@ -118,52 +138,66 @@ export class UnnamedStringError extends OperationalError {
   }
 }
 
+export class NotAStringError extends OperationalError {
+  public constructor(name: string, context?: string) {
+    super({
+      mergeFields: { fieldName: name },
+      message: `${name} must be a string.`,
+      context: getContext(name, context),
+    });
+  }
+}
+
 export class EmptyStringError extends OperationalError {
-  public constructor(name: string) {
+  public constructor(name: string, context?: string) {
     super({
       mergeFields: { fieldName: name },
       message: `${name} cannot be empty.`,
-      context: `Attempting to create a "${name}".`,
+      context: getContext(name, context),
     });
   }
 }
 
 export class NullValueError extends OperationalError {
-  public constructor(name: string) {
+  public constructor(name: string, context?: string) {
     super({
       mergeFields: { fieldName: name },
       message: `${name} cannot be null.`,
-      context: `Attempting to create a "${name}".`,
+      context: getContext(name, context),
     });
   }
 }
 
 export class MinLengthError extends OperationalError {
-  public constructor(name: string, minLength: number) {
+  public constructor(name: string, minLength: number, context?: string) {
     super({
       mergeFields: { fieldName: name, minLength },
       message: `${name} must be at least ${minLength} characters long.`,
-      context: `Attempting to create a "${name}".`,
+      context: getContext(name, context),
     });
   }
 }
 
 export class MaxLengthError extends OperationalError {
-  public constructor(name: string, maxLength: number) {
+  public constructor(name: string, maxLength: number, context?: string) {
     super({
       mergeFields: { fieldName: name, maxLength },
       message: `${name} cannot exceed ${maxLength} characters.`,
-      context: `Attempting to create a "${name}".`,
+      context: getContext(name, context),
     });
   }
 }
 
 export class MalformedError extends OperationalError {
-  public constructor(name: string, format: RegExp) {
+  public constructor(name: string, format: RegExp, context?: string) {
     super({
       mergeFields: { fieldName: name, format },
       message: `${name} must obey format: "${format.toString()}".`,
-      context: `Attempting to create a "${name}".`,
+      context: getContext(name, context),
     });
   }
+}
+
+function getContext(name: string, context?: string) {
+  return context ?? `Attempting to create a "${name}".`;
 }

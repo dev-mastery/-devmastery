@@ -1,6 +1,5 @@
 import type {
   GetStaticPaths,
-  GetStaticPathsContext,
   GetStaticProps,
   GetStaticPropsContext,
 } from "next";
@@ -20,7 +19,7 @@ import {
 import {
   FaReddit as RedditIcon,
   FaTwitter as TwitterIcon,
-  FaGithub as GithubIcon,
+  // FaGithub as GithubIcon,
   FaFacebook as FacebookIcon,
 } from "react-icons/fa";
 import * as labels from "../../label";
@@ -46,6 +45,7 @@ import {
   // WorkplaceShareButton,
 } from "react-share";
 import * as React from "react";
+import AppLayout from "../../components/AppLayout";
 // import { LanguageFactory } from "../../common/entities";
 
 const Post = styled.article`
@@ -72,7 +72,7 @@ const Post = styled.article`
         : props.theme.colors.accent};
     text-decoration: underline;
   }
-  font-family: ${(props) => props.theme.fonts.body};
+  font-family: ${(props) => props.theme.fonts?.body};
 `;
 
 const PostBody = styled.section`
@@ -84,7 +84,7 @@ const PostBody = styled.section`
 const PostTitle = styled.h1`
   font-size: 50px;
   line-height: 1;
-  font-family: ${(props) => props.theme.fonts.heading};
+  font-family: ${(props) => props.theme.fonts?.heading};
   font-weight: 300;
   margin-bottom: 18px;
   margin-top: 0;
@@ -99,17 +99,17 @@ const PostByline = styled.small`
   text-align: center;
 `;
 
-const PostMeta = styled.small`
-  color: ${(props) => props.theme.colors.medium};
-  cursor: pointer;
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 700;
-  /* padding: 4px 1rem 4px 0; */
-  text-align: center;
-  text-transform: uppercase;
-  user-select: none;
-`;
+// const PostMeta = styled.small`
+//   color: ${(props) => props.theme.colors.medium};
+//   cursor: pointer;
+//   display: block;
+//   font-size: 0.8rem;
+//   font-weight: 700;
+//   /* padding: 4px 1rem 4px 0; */
+//   text-align: center;
+//   text-transform: uppercase;
+//   user-select: none;
+// `;
 
 const PostImage = styled.div`
   position: relative;
@@ -145,63 +145,75 @@ function getCurrentUrl() {
   if (typeof window !== "undefined") {
     return window.location.href;
   }
+  return "";
 }
 
-type PostPageProps = Awaited<ReturnType<typeof viewPost>>;
+type PostPageProps = {
+  post: NonNullable<Awaited<ReturnType<typeof viewPost>>>;
+  t: { [key: string]: string };
+};
 
 export default React.memo(PostPage);
 
 function PostPage({
-  author,
-  datePublished,
-  durationInMinutes,
-  bodyAsHtml,
-  image,
-  language,
-  slug,
-  title,
+  post: {
+    author,
+    datePublished,
+    durationInMinutes,
+    bodyAsHtml,
+    image,
+    locale,
+    otherLocales,
+    slug,
+    title,
+  },
+  t,
 }: PostPageProps) {
   return (
-    <Post>
-      <PostTitle>{title}</PostTitle>
-      <PostByline>
-        {author} ✦ {datePublished} ✦ {durationInMinutes} minutes
-      </PostByline>
-      <PostImage>
-        <Image
-          src={`/images/${slug}/${image.src}`}
-          layout="fill"
-          objectFit="cover"
-          title={image.caption}
-          alt={image.caption}
-        ></Image>
-      </PostImage>
-      <PostToolbar>
-        <PostTools>
-          <EmailShareButton url={getCurrentUrl()}>
-            <MailIcon size={20} />
-          </EmailShareButton>
-          <TwitterShareButton url={getCurrentUrl()}>
-            <TwitterIcon size={20} />
-          </TwitterShareButton>
-          <RedditShareButton url={getCurrentUrl()}>
-            <RedditIcon size={20} />
-          </RedditShareButton>
+    <AppLayout t={t}>
+      <Post>
+        <PostTitle>{title}</PostTitle>
+        <PostByline>
+          {author} ✦ {datePublished} ✦ {durationInMinutes} minutes
+        </PostByline>
+        {image && (
+          <PostImage>
+            <Image
+              src={`/images/${slug}/${image.src}`}
+              layout="fill"
+              objectFit="cover"
+              title={image.alt}
+              alt={image.alt}
+            ></Image>
+          </PostImage>
+        )}
+        <PostToolbar>
+          <PostTools>
+            <EmailShareButton url={getCurrentUrl()}>
+              <MailIcon size={20} />
+            </EmailShareButton>
+            <TwitterShareButton url={getCurrentUrl()}>
+              <TwitterIcon size={20} />
+            </TwitterShareButton>
+            <RedditShareButton url={getCurrentUrl()}>
+              <RedditIcon size={20} />
+            </RedditShareButton>
 
-          <FacebookShareButton url={getCurrentUrl()}>
-            <FacebookIcon size={20} />
-          </FacebookShareButton>
-          <TextSizeIcon size={20} />
-          <Link
-            href={`https://github.com/dev-mastery/devmastery/edit/main/websites/devmastery.com/documents/${slug}/index.${language.locale}.md`}
-          >
-            <EditIcon size={20} style={{ cursor: "pointer" }} />
-          </Link>
-          <TranslateIcon size={20} />
-        </PostTools>
-      </PostToolbar>
-      <PostBody dangerouslySetInnerHTML={{ __html: bodyAsHtml }} />
-    </Post>
+            <FacebookShareButton url={getCurrentUrl()}>
+              <FacebookIcon size={20} />
+            </FacebookShareButton>
+            <TextSizeIcon size={20} />
+            <Link
+              href={`https://github.com/dev-mastery/devmastery/edit/main/websites/devmastery.com/documents/${slug}/index.${locale}.md`}
+            >
+              <EditIcon size={20} style={{ cursor: "pointer" }} />
+            </Link>
+            {Boolean(otherLocales?.length) && <TranslateIcon size={20} />}
+          </PostTools>
+        </PostToolbar>
+        <PostBody dangerouslySetInnerHTML={{ __html: bodyAsHtml }} />
+      </Post>
+    </AppLayout>
   );
 }
 
@@ -210,24 +222,19 @@ export const getStaticProps: GetStaticProps<PostPageProps> = async function (
 ) {
   const locale = (props.locale ?? props.defaultLocale) as Locale;
   const post = await viewPost({
-    slug: props.params.slug as string,
+    slug: props.params?.slug as string,
     locale,
   });
-  const t = await labels.translate({
-    namespace: "glossary",
-    locale,
-  });
-  return {
-    notFound: post == null,
-    props: { ...post, t, menuItems: [] },
-  };
+
+  const t = await labels.localize({ locale });
+  if (post == null) {
+    return { notFound: true };
+  }
+  return { props: { post, t } };
 };
 
-export const getStaticPaths: GetStaticPaths = async function (
-  _context: GetStaticPathsContext
-) {
+export const getStaticPaths: GetStaticPaths = async function () {
   const slugs = await listSlugs();
   const paths = slugs.map((slug) => ({ params: { slug } }));
-
   return { paths, fallback: false };
 };

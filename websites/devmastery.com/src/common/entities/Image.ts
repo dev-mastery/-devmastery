@@ -68,14 +68,19 @@ export class Image {
   }
 
   public toJSON(): ImageInfo {
-    return {
+    const json: ImageInfo = {
       href: this.href,
       src: this.src,
       height: this.height,
       width: this.width,
       quality: this.quality,
-      alt: this.alt,
     };
+
+    if (this.alt) {
+      json.alt = this.alt;
+    }
+
+    return json;
   }
 
   public get alt(): string | undefined {

@@ -40,14 +40,8 @@ interface PostFrontmatter {
   tags?: string[];
 }
 
-export function fromMarkdown({
-  dateCreated,
-  dateModified,
-  rawMarkdown,
-  locale,
-  translations,
-  slug,
-}: FromMarkdownProps): Post {
+export function fromMarkdown(props: FromMarkdownProps): Post {
+  const { dateCreated, dateModified, rawMarkdown, locale, slug } = props;
   const markdown = Markdown.from<PostFrontmatter>(FullText.of(rawMarkdown));
   const frontmatter = markdown.frontmatter;
 
@@ -62,12 +56,11 @@ export function fromMarkdown({
     id: ContentId.from({ slug: Slug.of(slug), locale }),
     image: extractImage(frontmatter),
     locale,
-    slug: Slug.of(slug),
+    slug: Slug.from(slug),
     summary: extractSummary({ frontmatter, markdown }),
     tags: frontmatter.tags?.map(Tag.of),
     title: Title.of(frontmatter.title),
     topic: Topic.of(frontmatter.topic),
-    translations,
   });
 }
 

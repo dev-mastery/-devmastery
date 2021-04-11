@@ -6,44 +6,48 @@ import {
   PropsWithChildren,
   useEffect,
 } from "react";
-import theme from ".";
+import initialTheme from ".";
 
 const THEME_MODE_KEY = "THEME_MODE";
 const THEME_SCALE_KEY = "THEME_SCALE";
 
 const defaultContextData = {
-  theme,
-  setMode: (mode: string) => {},
-  setScale: (scale: number) => {},
+  theme: initialTheme,
+  setMode: (aMode: string) => aMode,
+  setScale: (aScale: number) => aScale,
 };
 
 const ThemeContext = createContext(defaultContextData);
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = (): typeof defaultContextData =>
+  useContext(ThemeContext);
 
 export default function ThemeProvider({
   children,
   theme,
-}: PropsWithChildren<{ theme: Theme }>) {
+}: PropsWithChildren<{ theme: Theme }>): JSX.Element {
   const [mode, _setMode] = useState<string>(theme.mode);
   const [scale, _setScale] = useState<number>(theme.scale);
 
   useEffect(() => {
-    let savedMode: string = localStorage.getItem(THEME_MODE_KEY) ?? theme.mode;
-    let savedScale: string | number =
+    const savedMode: string =
+      localStorage.getItem(THEME_MODE_KEY) ?? theme.mode;
+    const savedScale: string | number =
       localStorage.getItem(THEME_SCALE_KEY) ?? theme.scale;
 
     _setMode(savedMode);
     _setScale(Number(savedScale));
   }, []);
 
-  function setMode(mode: string) {
-    localStorage.setItem(THEME_MODE_KEY, mode);
-    _setMode(mode);
+  function setMode(aMode: string) {
+    localStorage.setItem(THEME_MODE_KEY, aMode);
+    _setMode(aMode);
+    return aMode;
   }
 
-  function setScale(scale: number) {
-    localStorage.setItem(THEME_SCALE_KEY, scale.toString());
-    _setScale(scale);
+  function setScale(aScale: number) {
+    localStorage.setItem(THEME_SCALE_KEY, aScale.toString());
+    _setScale(aScale);
+    return aScale;
   }
 
   function computeTheme() {

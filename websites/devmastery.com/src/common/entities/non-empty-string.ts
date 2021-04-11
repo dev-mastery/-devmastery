@@ -1,47 +1,27 @@
-import { OperationalError } from "@devmastery/error";
+import { validateNonEmptyString } from "../helpers/is-non-empty-string";
+import {
+  makeValueObjectType,
+  ValueObject,
+  ValueObjectType,
+} from "../value-objects/ValueObject";
 
-export interface NonEmptyString {
-  equals(other: NonEmptyString): boolean;
-  label: string;
-  toString(): string;
-}
-export function nonEmptyString(label: string, value: string): NonEmptyString {
-  let name = value?.trim();
-  validateNonEmptyString(label, name);
-  return Object.freeze({
-    equals: (other: NonEmptyString) => name === other.toString(),
-    label,
-    toString: () => name,
+export type NonEmptyStringType<TName extends string> = ValueObjectType<
+  TName,
+  string
+>;
+
+export type NonEmptyString<TName extends string> = ValueObject<TName, string>;
+
+export const makeNonEmptyStringType = <TName extends string>(
+  type: TName
+): NonEmptyStringType<TName> =>
+  makeValueObjectType<TName, string>({
+    type,
+    validate: validateNonEmptyString(type),
   });
-}
 
-export function validateNonEmptyString(label: string, value: string) {
-  if (value == null) {
-    throw new NullStringError(label);
-  }
-  if (!Boolean(value.length)) {
-    throw new EmptyStringError(label);
-  }
-}
+type Cat = NonEmptyString<"Cat">;
+const Cat = makeNonEmptyStringType<"Cat">("Cat");
+const l: Cat = Cat.of("Luna");
 
-export function isValidNonEmptyString(value: string): boolean {
-  return value != null && Boolean(value.length);
-}
-
-class EmptyStringError extends OperationalError {
-  constructor(label: string) {
-    super({
-      mergeFields: { fieldName: label },
-      message: `${label} cannot be empty.`,
-    });
-  }
-}
-
-class NullStringError extends OperationalError {
-  constructor(label: string) {
-    super({
-      mergeFields: { fieldName: label },
-      message: `${label} cannot be null.`,
-    });
-  }
-}
+function meow(c: Cat) {}

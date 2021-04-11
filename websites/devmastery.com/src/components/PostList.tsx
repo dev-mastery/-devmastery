@@ -9,7 +9,7 @@ const PostGrid = styled.div`
   display: grid;
   width: 100%;
   grid-template-columns: auto-fit; //minmax(660px, 1fr);
-  grid-gap: 24px;
+  grid-gap: 20px;
   justify-content: space-between;
   margin: 0 auto;
   position: relative;
@@ -37,23 +37,51 @@ const PostCard = styled.section`
   cursor: pointer;
   &:nth-of-type(1) {
     grid-column: span 2;
+    margin-top: -2px;
+    &:active {
+      margin-top: -2px;
+      filter: drop-shadow(
+        ${(props) =>
+          `0px 0px 0px ${
+            props.theme.mode === "dark"
+              ? props.theme.colors.black
+              : props.theme.colors.dark
+          }`}
+      );
+    }
+    /* margin-bottom: -2px; */
   }
-  box-shadow: ${(props) =>
-    `0px 0px 2px ${
-      props.theme.mode === "dark"
-        ? props.theme.colors.black
-        : props.theme.colors.dark
-    }`};
-  &:hover {
-    margin-top: -1px;
-    box-shadow: ${(props) =>
-      `0px 0px 6px ${
+  filter: drop-shadow(
+    ${(props) =>
+      `0px 0px 2px ${
         props.theme.mode === "dark"
           ? props.theme.colors.black
           : props.theme.colors.dark
-      }`};
+      }`}
+  );
+  &:hover {
+    margin-top: -2px;
+    filter: drop-shadow(
+      ${(props) =>
+        `0px 0px 12px ${
+          props.theme.mode === "dark"
+            ? props.theme.colors.black
+            : props.theme.colors.dark
+        }`}
+    );
   }
-  transition: box-shadow 0.3s ease-out, margin-top 0.3s ease-out;
+  &:active {
+    margin-top: 0px;
+    filter: drop-shadow(
+      ${(props) =>
+        `0px 0px 0px ${
+          props.theme.mode === "dark"
+            ? props.theme.colors.black
+            : props.theme.colors.dark
+        }`}
+    );
+  }
+  /* transition: all 0.1s linear; */
   position: relative;
   user-select: none;
   & * img {
@@ -81,22 +109,22 @@ const PostText = styled.div`
   );
 `;
 
-const PostCategory = styled.small`
-  display: inline-block;
-  padding: 4px 1rem;
-  margin-bottom: 12px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  border: ${(props) => `solid 0.5px ${props.theme.colors.accent}`};
-  color: ${(props) => props.theme.colors.medium};
-  border-radius: 2px;
-  cursor: pointer;
-  &:hover {
-    background: ${(props) => props.theme.colors.soft};
-    color: ${(props) => props.theme.colors.dark};
-  }
-`;
+// const PostCategory = styled.small`
+//   display: inline-block;
+//   padding: 4px 1rem;
+//   margin-bottom: 12px;
+//   font-size: 0.8rem;
+//   font-weight: 700;
+//   text-transform: uppercase;
+//   border: ${(props) => `solid 0.5px ${props.theme.colors.accent}`};
+//   color: ${(props) => props.theme.colors.medium};
+//   border-radius: 2px;
+//   cursor: pointer;
+//   &:hover {
+//     background: ${(props) => props.theme.colors.soft};
+//     color: ${(props) => props.theme.colors.dark};
+//   }
+// `;
 
 const PostMeta = styled.small`
   border-radius: 2px;
@@ -125,10 +153,10 @@ function PostList({ posts, t }: PostListProps) {
         <Link href={`posts/${post.slug}`} key={post.id}>
           <PostCard>
             <Image
-              src={`/images/${post.slug}/${post.image.src}`}
+              src={`/images/${post.slug}/${post.image?.src}`}
               layout="fill"
               objectFit="cover"
-              alt={post.image.caption}
+              alt={post.image?.alt}
             ></Image>
             {post.category === "Videos" ||
               (post.category === "Podcast" && (
@@ -151,7 +179,7 @@ function PostList({ posts, t }: PostListProps) {
               </PostMeta>
               <PostTitle>{post.title}</PostTitle>
               <small>
-                {post.author} • {post.durationInMinutes} {t["minutes"]}
+                {post.author} • {post.duration} {t["minutes"]}
               </small>
               <Summary>{post.summary}</Summary>
             </PostText>

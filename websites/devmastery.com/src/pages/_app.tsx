@@ -1,11 +1,11 @@
 import { AppProps } from "next/app";
-import AppLayout from "../components/AppLayout";
+// import AppLayout from "../components/AppLayout";
 import { css, Global } from "@emotion/react";
 import ThemeProvider from "../theme/ThemeProvider";
 import theme from "../theme";
 import "../styles/code.css";
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <ThemeProvider theme={theme}>
       <Global
@@ -18,6 +18,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
               sans-serif;
             font-size: 18px;
+            scroll-behavior: smooth;
           }
 
           a {
@@ -30,9 +31,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           }
         `}
       />
-      <AppLayout {...pageProps}>
-        <Component {...pageProps} />
-      </AppLayout>
+
+      <Component {...pageProps} />
     </ThemeProvider>
   );
 }
