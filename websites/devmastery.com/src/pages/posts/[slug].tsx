@@ -50,7 +50,7 @@ import AppLayout from "../../components/AppLayout";
 
 const Post = styled.article`
   width: 96vw;
-  max-width: 36rem;
+  max-width: 38rem;
   font-size: 21px;
   line-height: 1.8rem;
   margin: 2rem auto;
@@ -58,8 +58,11 @@ const Post = styled.article`
     props.theme.mode === "dark"
       ? props.theme.colors.light
       : props.theme.colors.dark};
+  & > * h2 {
+    margin-top: 3rem;
+    line-height: 1rem;
+  }
   & > p,
-  h2,
   ul {
     margin-bottom: 32px;
     /* padding-left: 5rem;

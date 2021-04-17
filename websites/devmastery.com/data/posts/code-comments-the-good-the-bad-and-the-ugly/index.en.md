@@ -86,9 +86,8 @@ Here’s a good example from Lodash:
 
 ```javascript
 function addSetEntry(set, value) {
-  /* 
-   Don't return `set.add` because it's not chainable in IE 11.
-  */
+  // Don't return `set.add` because
+  // it's not chainable in IE 11.
   set.add(value);
   return set;
 }
@@ -120,10 +119,8 @@ Again, the above is more about being funny than being helpful. But you SHOULD le
 Here’s a simple example in JavaScript:
 
 ```javascript
-/* 
-don't use the global isFinite() because 
-it returns true for null values
-*/
+// don't use the global isFinite() because
+// it returns true for null values
 Number.isFinite(value);
 ```
 
@@ -150,7 +147,8 @@ Move on and call me an idiot later.
 
 ```javascript
 /* 
-Class used to workaround Richard being a f***ing idiot
+Class used to work around Richard 
+being a f***ing idiot
 */
 ```
 

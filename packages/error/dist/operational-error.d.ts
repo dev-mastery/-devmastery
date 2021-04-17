@@ -11,14 +11,14 @@ export declare class OperationalError extends Error {
     get context(): string | null;
     get name(): string;
     get mergeFields(): MergeFields;
-    toPlainObject(): Readonly<PlainError>;
+    toJSON(): Readonly<PlainError>;
 }
-declare type MergeFields = {
+export declare type MergeFields = {
     [key: string]: {
         toString(): string;
     };
 };
-declare type ErrorSeverity = "High" | "Medium" | "Low";
+export declare type ErrorSeverity = "High" | "Medium" | "Low";
 interface PlainError {
     severity: ErrorSeverity;
     context: string;

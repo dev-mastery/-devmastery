@@ -15,7 +15,7 @@ export function makeHandleError({ logger }: { logger: Logger }) {
       throw error;
     }
 
-    const errorInfo = error.toPlainObject();
+    const errorInfo = error.toJSON();
 
     switch (error.severity) {
       case "Medium":

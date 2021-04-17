@@ -1,21 +1,33 @@
 import * as fs from "fs";
 import * as path from "path";
+import { OperationalError } from "@devmastery/error";
 import { Slug } from "../../common/entities";
 import type { ContentId } from "../../common/entities";
-import { pipe } from "../../common/helpers/fp";
 import type { Category, Post, Topic } from "../entities";
 import { fromMarkdown } from "../mappers";
 import localeConfig from "../../../locales.config";
 
-export const getSlugs = async (): Promise<Slug[]> =>
-  pipe(slugPaths, toSlugsFromDirs);
+// Note: Resist the temptation to add caching here.
+// NextJS builds each page in a separate process
+// so caching needs to happen out-of-proc (local filesystem or database).
+// Since the source data is already on the local filesystem, caching
+// would do no good.
+
+const ROOT = path.join(process.cwd(), "data", "posts");
+
+export const getSlugs = async (): Promise<Slug[]> => {
+  const toSlug = Slug.from;
+  const folders = listPostFolders(ROOT);
+  return folders.map(toSlug);
+};
+
+export const listAll = async (): Promise<Post[]> =>
+  localeConfig.locales.flatMap((l) => listAllInLocale(l as Locale));
 
 export const get = async (id: ContentId): Promise<Post | null> => {
   const byId = (p: Post) => p.id.equals(id);
   const results = await find(byId);
-  if (results.length > 1) {
-    // TODO: Handle
-  }
+  if (results.length > 1) warnAboutBadDataForPost(id);
   return results[0];
 };
 
@@ -48,91 +60,59 @@ export const find = async (
   predicate: (p: Post) => boolean
 ): Promise<Post[]> => {
   const posts = await listAll();
-  return pipe(predicate, findPostsInList(posts));
+  const findPosts = findPostsInList(posts);
+  return findPosts(predicate);
 };
 
-export const listAll = async (): Promise<Post[]> =>
-  pipe(slugPaths, getAllPosts(localeConfig.locales));
+const listPostFolders = (parent: string) => fs.readdirSync(parent);
+
+const listAllInLocale = (locale: Locale) => {
+  const folders = listPostFolders(ROOT);
+  return folders.reduce((posts, postDir) => {
+    const getFilePath = getPostFilePathFromPostDir(postDir);
+    const postFilePath = getFilePath(locale);
+    const meta = getPostMeta(postFilePath);
+    const rawMarkdown = meta ? getPostContent(postFilePath) : null;
+    if (meta && rawMarkdown) {
+      const post = fromMarkdown({
+        ...meta,
+        path: postDir,
+        rawMarkdown,
+        locale,
+      });
+      posts.push(post);
+    }
+    return posts;
+  }, [] as Post[]);
+};
+
+const getPostFilePathFromRoot = (root: string) => (postDir: string) => (
+  locale: string
+) => path.join(root, postDir, `index.${locale}.md`);
+
+const getPostFilePathFromPostDir = getPostFilePathFromRoot(ROOT);
+
+const getPostMeta = (postPath: string) =>
+  fs.existsSync(postPath)
+    ? [fs.statSync(postPath)].map((s) => ({
+        dateCreated: s.ctimeMs,
+        dateModified: s.mtimeMs,
+      }))[0]
+    : null;
+
+const getPostContent = (postPath: string) =>
+  fs.existsSync(postPath)
+    ? fs.readFileSync(postPath, { encoding: "utf8" })
+    : null;
 
 const findPostsInList = (posts: Post[]) => (predicate: (p: Post) => boolean) =>
   posts.filter(predicate);
 
-const buildPath = (root: string) => (postPath: string) =>
-  path.join(root, postPath);
-
-const buildAbsolutePath = (absoluteBase: string) => (relativePath: string) =>
-  path.join(absoluteBase, relativePath);
-const prependAbsolutePath = buildAbsolutePath(process.cwd());
-const postsRoot = prependAbsolutePath(path.join("data", "posts"));
-
-const getAbsoluteSlugPath = buildPath(postsRoot);
-
-const readDir = (p: string) => fs.readdirSync(p);
-const slugPaths = readDir(postsRoot);
-
-const toSlug = Slug.from;
-const toSlugsFromDirs = (dirs: string[]) => {
-  return dirs
-    .filter((d) => fs.lstatSync(getAbsoluteSlugPath(d)).isDirectory())
-    .map(toSlug);
+const warnAboutBadDataForPost = (id: ContentId): never => {
+  throw new OperationalError({
+    context: `Retrieving Post with id: "${id}"`,
+    mergeFields: { id },
+    message: `WARNING: multiple posts with id: "${id}"`,
+    severity: "Medium",
+  });
 };
-
-const getPostFilePath = (locale: string) => (d: string) =>
-  path.join(getAbsoluteSlugPath(d), `index.${locale}.md`);
-
-const getFileInfo = (p: string) => {
-  if (fs.existsSync(p)) {
-    const stat = fs.statSync(p);
-    const rawMarkdown = fs.readFileSync(p, { encoding: "utf8" });
-
-    return {
-      dateCreated: stat.ctimeMs,
-      dateModified: stat.mtimeMs,
-      rawMarkdown,
-      path: p,
-    };
-  }
-};
-
-const getAllPosts = (locales: string[]) => (dirs: string[]) =>
-  dirs
-    .flatMap((d) =>
-      locales.map((l) =>
-        pipe(
-          {
-            locale: l as Locale,
-            slug: d,
-            ...pipe(d, getPostFilePath(l), getFileInfo),
-          },
-          toMarkdown
-        )
-      )
-    )
-    .filter((p) => p != null) as Post[];
-
-const toMarkdown = (props: Partial<FromMarkdownProps>) => {
-  if (areMarkdownProps(props)) {
-    return fromMarkdown(props);
-  }
-};
-
-const areMarkdownProps = (
-  props: Partial<FromMarkdownProps>
-): props is FromMarkdownProps => {
-  return Boolean(
-    props.rawMarkdown &&
-      props.dateCreated &&
-      props.dateModified &&
-      props.slug &&
-      props.locale
-  );
-};
-
-interface FromMarkdownProps {
-  dateCreated: number;
-  dateModified: number;
-  rawMarkdown: string;
-  locale: Locale;
-  translations?: Locale[];
-  slug: string;
-}

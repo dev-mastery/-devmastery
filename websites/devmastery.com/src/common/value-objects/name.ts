@@ -1,5 +1,5 @@
 import { validateNonEmptyString } from "../helpers/is-non-empty-string";
-import { StringValue } from "./ValueObject";
+import { StringValue } from "./value-object-type";
 
 const TAG = "Name" as const;
 export type Name = StringValue<typeof TAG>;

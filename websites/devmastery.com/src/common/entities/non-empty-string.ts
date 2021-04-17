@@ -3,7 +3,7 @@ import {
   makeValueObjectType,
   ValueObject,
   ValueObjectType,
-} from "../value-objects/ValueObject";
+} from "../value-objects/value-object-type";
 
 export type NonEmptyStringType<TName extends string> = ValueObjectType<
   TName,

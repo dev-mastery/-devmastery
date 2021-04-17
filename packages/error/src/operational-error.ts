@@ -40,7 +40,7 @@ export class OperationalError extends Error {
     return this.#mergeFields;
   }
 
-  toPlainObject(): Readonly<PlainError> {
+  toJSON(): Readonly<PlainError> {
     return Object.freeze({
       context: this.context,
       mergeFields: this.mergeFields,
@@ -51,8 +51,8 @@ export class OperationalError extends Error {
   }
 }
 
-type MergeFields = { [key: string]: { toString(): string } };
-type ErrorSeverity = "High" | "Medium" | "Low";
+export type MergeFields = { [key: string]: { toString(): string } };
+export type ErrorSeverity = "High" | "Medium" | "Low";
 interface PlainError {
   severity: ErrorSeverity;
   context: string;

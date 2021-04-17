@@ -72,7 +72,6 @@ const maxPosts = 7;
 export const getStaticProps: GetStaticProps = async function (
   props: GetStaticPropsContext
 ) {
-  console.log("getStaticProps");
   const locale = (props.locale ?? props.defaultLocale) as Locale;
   const postList = await posts
     .browseLatest({ locale, max: maxPosts })

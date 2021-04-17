@@ -14,7 +14,6 @@ export function makeBrowseLatest({ postData }: { postData: PostData }) {
     locale: Locale;
     max: number;
   }): Promise<PostPreview[]> {
-    console.log("!!");
     const found = await postData.findByLocale(locale);
     return sort.newToOld(found)?.map(toPreview)?.slice(0, max) ?? [];
   };

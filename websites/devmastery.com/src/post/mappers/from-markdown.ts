@@ -24,7 +24,7 @@ interface FromMarkdownProps {
   rawMarkdown: string;
   locale: Locale;
   translations?: Locale[];
-  slug: string;
+  path: string;
 }
 
 interface PostFrontmatter {
@@ -41,7 +41,8 @@ interface PostFrontmatter {
 }
 
 export function fromMarkdown(props: FromMarkdownProps): Post {
-  const { dateCreated, dateModified, rawMarkdown, locale, slug } = props;
+  const { dateCreated, dateModified, rawMarkdown, locale, path } = props;
+  const slug = Slug.from(path);
   const markdown = Markdown.from<PostFrontmatter>(FullText.of(rawMarkdown));
   const frontmatter = markdown.frontmatter;
 
@@ -53,10 +54,10 @@ export function fromMarkdown(props: FromMarkdownProps): Post {
     dateModified: new Date(dateModified),
     datePublished: new Date(frontmatter.datePublished ?? dateModified),
     duration: extractDuration({ frontmatter, markdown }),
-    id: ContentId.from({ slug: Slug.of(slug), locale }),
+    id: ContentId.from({ slug, locale }),
     image: extractImage(frontmatter),
     locale,
-    slug: Slug.from(slug),
+    slug,
     summary: extractSummary({ frontmatter, markdown }),
     tags: frontmatter.tags?.map(Tag.of),
     title: Title.of(frontmatter.title),

@@ -91,7 +91,6 @@ function handleYouTubeVideo({
 function extractyouTubeId(url: URL): string | null {
   if (url.host === "youtu.be") {
     const id = url.pathname.replace("/", "");
-    console.log(id);
     return id;
   }
   if (["www.youtube.com", "youtube.com"].includes(url.host)) {
