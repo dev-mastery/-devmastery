@@ -11,68 +11,72 @@ import localeConfig from "../../../locales.config";
 // NextJS builds each page in a separate process
 // so caching needs to happen out-of-proc (local filesystem or database).
 // Since the source data is already on the local filesystem, caching
-// would do no good.
+// wouldn't help very much.
 
 const ROOT = path.join(process.cwd(), "data", "posts");
 
-export const getSlugs = async (): Promise<Slug[]> => {
+export async function getSlugs(): Promise<Slug[]> {
   const toSlug = Slug.from;
   const folders = listPostFolders(ROOT);
   return folders.map(toSlug);
-};
+}
 
-export const listAll = async (): Promise<Post[]> =>
-  localeConfig.locales.flatMap((l) => listAllInLocale(l as Locale));
+export async function listAll(): Promise<Post[]> {
+  return localeConfig.locales.flatMap((l) => listAllInLocale(l as Locale));
+}
 
-export const get = async (id: ContentId): Promise<Post | null> => {
-  const byId = (p: Post) => p.id.equals(id);
+export async function get(id: ContentId): Promise<Post | null> {
+  const byId = (post: Post) => post.id.equals(id);
   const results = await find(byId);
-  if (results.length > 1) warnAboutBadDataForPost(id);
+  if (results.length > 1) {
+    warnAboutBadDataForPost(id);
+  }
   return results[0];
-};
+}
 
-export const findByLocale = async (locale: Locale): Promise<Post[]> => {
-  const byLocale = (p: Post) => p.locale === locale;
+export async function findByLocale(locale: Locale): Promise<Post[]> {
+  const byLocale = (post: Post) => post.locale === locale;
   return find(byLocale);
-};
+}
 
-export const findByCategory = async (
+export async function findByCategory(
   category: Category,
   locale?: Locale
-): Promise<Post[]> => {
-  const byCategory = (p: Post) =>
-    p.category.equals(category) && p.locale === (locale ?? p.locale);
+): Promise<Post[]> {
+  const byCategory = (post: Post) =>
+    post.category.equals(category) && post.locale === (locale ?? post.locale);
 
   return find(byCategory);
-};
+}
 
-export const findByTopic = async (
+export async function findByTopic(
   topic: Topic,
   locale?: Locale
-): Promise<Post[]> => {
-  const byTopic = (p: Post) =>
-    p.topic.equals(topic) && p.locale === (locale ?? p.locale);
+): Promise<Post[]> {
+  const byTopic = (post: Post) =>
+    post.topic.equals(topic) && post.locale === (locale ?? post.locale);
 
   return find(byTopic);
-};
+}
 
-export const find = async (
-  predicate: (p: Post) => boolean
-): Promise<Post[]> => {
+export async function find(predicate: (p: Post) => boolean): Promise<Post[]> {
   const posts = await listAll();
   const findPosts = findPostsInList(posts);
   return findPosts(predicate);
-};
+}
 
-const listPostFolders = (parent: string) => fs.readdirSync(parent);
+function listPostFolders(parent: string): string[] {
+  return fs.readdirSync(parent);
+}
 
-const listAllInLocale = (locale: Locale) => {
+function listAllInLocale(locale: Locale): Post[] {
   const folders = listPostFolders(ROOT);
   return folders.reduce((posts, postDir) => {
     const getFilePath = getPostFilePathFromPostDir(postDir);
     const postFilePath = getFilePath(locale);
     const meta = getPostMeta(postFilePath);
     const rawMarkdown = meta ? getPostContent(postFilePath) : null;
+
     if (meta && rawMarkdown) {
       const post = fromMarkdown({
         ...meta,
@@ -84,35 +88,50 @@ const listAllInLocale = (locale: Locale) => {
     }
     return posts;
   }, [] as Post[]);
-};
+}
 
-const getPostFilePathFromRoot = (root: string) => (postDir: string) => (
-  locale: string
-) => path.join(root, postDir, `index.${locale}.md`);
+function getPostFilePathFromRoot(
+  root: string
+): (postDir: string) => (locale: string) => string {
+  return function fromDir(postDir: string): (locale: string) => string {
+    return function fromLocale(locale: string): string {
+      return path.join(root, postDir, `index.${locale}.md`);
+    };
+  };
+}
 
 const getPostFilePathFromPostDir = getPostFilePathFromRoot(ROOT);
 
-const getPostMeta = (postPath: string) =>
-  fs.existsSync(postPath)
+function getPostMeta(
+  postPath: string
+): { dateCreated: number; dateModified: number } | null {
+  return fs.existsSync(postPath)
     ? [fs.statSync(postPath)].map((s) => ({
         dateCreated: s.ctimeMs,
         dateModified: s.mtimeMs,
       }))[0]
     : null;
+}
 
-const getPostContent = (postPath: string) =>
-  fs.existsSync(postPath)
+function getPostContent(postPath: string): string | null {
+  return fs.existsSync(postPath)
     ? fs.readFileSync(postPath, { encoding: "utf8" })
     : null;
+}
 
-const findPostsInList = (posts: Post[]) => (predicate: (p: Post) => boolean) =>
-  posts.filter(predicate);
+function findPostsInList(
+  posts: Post[]
+): (predicate: (p: Post) => boolean) => Post[] {
+  return function filterBy(predicate: (p: Post) => boolean): Post[] {
+    return posts.filter(predicate);
+  };
+}
 
-const warnAboutBadDataForPost = (id: ContentId): never => {
+function warnAboutBadDataForPost(id: ContentId): never {
   throw new OperationalError({
     context: `Retrieving Post with id: "${id}"`,
     mergeFields: { id },
     message: `WARNING: multiple posts with id: "${id}"`,
     severity: "Medium",
   });
-};
+}
